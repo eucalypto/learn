@@ -1,4 +1,7 @@
-package net.eucalypto;
+package net.eucalypto.weatherstation.data;
+
+import net.eucalypto.weatherstation.interfaces.Observer;
+import net.eucalypto.weatherstation.interfaces.Subject;
 
 import java.util.ArrayList;
 import java.util.List;

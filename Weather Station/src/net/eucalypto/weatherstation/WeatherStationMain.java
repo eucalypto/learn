@@ -1,6 +1,11 @@
-package net.eucalypto;
+package net.eucalypto.weatherstation;
 
-public class WeatherStation {
+import net.eucalypto.weatherstation.data.WeatherData;
+import net.eucalypto.weatherstation.display.CurrentConditionsDisplay;
+import net.eucalypto.weatherstation.display.ForecastDisplay;
+import net.eucalypto.weatherstation.display.StatisticsDisplay;
+
+public class WeatherStationMain {
     public static void main(String[] args) {
         WeatherData weatherData = new WeatherData();
 

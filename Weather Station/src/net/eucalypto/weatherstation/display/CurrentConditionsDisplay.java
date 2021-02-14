@@ -1,4 +1,8 @@
-package net.eucalypto;
+package net.eucalypto.weatherstation.display;
+
+import net.eucalypto.weatherstation.interfaces.DisplayElement;
+import net.eucalypto.weatherstation.interfaces.Observer;
+import net.eucalypto.weatherstation.data.WeatherData;
 
 public class CurrentConditionsDisplay implements Observer, DisplayElement {
     private float temperature;
