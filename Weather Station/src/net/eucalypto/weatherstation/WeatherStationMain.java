@@ -3,6 +3,7 @@ package net.eucalypto.weatherstation;
 import net.eucalypto.weatherstation.data.WeatherData;
 import net.eucalypto.weatherstation.display.CurrentConditionsDisplay;
 import net.eucalypto.weatherstation.display.ForecastDisplay;
+import net.eucalypto.weatherstation.display.HeatIndexDisplay;
 import net.eucalypto.weatherstation.display.StatisticsDisplay;
 
 public class WeatherStationMain {
@@ -12,6 +13,7 @@ public class WeatherStationMain {
         CurrentConditionsDisplay currentDisplay = new CurrentConditionsDisplay(weatherData);
         StatisticsDisplay statisticsDisplay = new StatisticsDisplay(weatherData);
         ForecastDisplay forecastDisplay = new ForecastDisplay(weatherData);
+        HeatIndexDisplay heatIndexDisplay = new HeatIndexDisplay(weatherData);
 
 
         weatherData.setMeasurements(10, 65, 30.4f);
