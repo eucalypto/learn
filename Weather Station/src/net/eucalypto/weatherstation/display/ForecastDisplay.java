@@ -1,8 +1,8 @@
 package net.eucalypto.weatherstation.display;
 
+import net.eucalypto.weatherstation.data.WeatherData;
 import net.eucalypto.weatherstation.interfaces.DisplayElement;
 import net.eucalypto.weatherstation.interfaces.Observer;
-import net.eucalypto.weatherstation.data.WeatherData;
 
 public class ForecastDisplay implements Observer, DisplayElement {
     private float currentPressure = 29.92f;
@@ -27,9 +27,9 @@ public class ForecastDisplay implements Observer, DisplayElement {
     }
 
     @Override
-    public void update(float temp, float humidity, float pressure) {
+    public void update() {
         lastPressure = currentPressure;
-        currentPressure = pressure;
+        currentPressure = weatherData.getPressure();
 
         display();
     }

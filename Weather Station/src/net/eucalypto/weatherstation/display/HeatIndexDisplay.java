@@ -1,20 +1,20 @@
 package net.eucalypto.weatherstation.display;
 
+import net.eucalypto.weatherstation.data.WeatherData;
 import net.eucalypto.weatherstation.interfaces.DisplayElement;
 import net.eucalypto.weatherstation.interfaces.Observer;
-import net.eucalypto.weatherstation.interfaces.Subject;
 
 public class HeatIndexDisplay implements DisplayElement, Observer {
     private float temp;
     private float humidity;
     private float heatIndex;
-    private Subject subject;
+    private WeatherData weatherData;
 
 
-    public HeatIndexDisplay(Subject subject) {
-        this.subject = subject;
+    public HeatIndexDisplay(WeatherData weatherData) {
+        this.weatherData = weatherData;
 
-        subject.registerObserver(this);
+        weatherData.registerObserver(this);
     }
 
     @Override
@@ -23,9 +23,9 @@ public class HeatIndexDisplay implements DisplayElement, Observer {
     }
 
     @Override
-    public void update(float temp, float humidity, float pressure) {
-        this.temp = temp;
-        this.humidity = humidity;
+    public void update() {
+        temp = weatherData.getTemperature();
+        humidity = weatherData.getHumidity();
 
         heatIndex = calculateHeatIndex(temp, humidity);
         display();
