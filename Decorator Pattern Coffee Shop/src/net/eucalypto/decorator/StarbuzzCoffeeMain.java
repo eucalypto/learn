@@ -11,6 +11,25 @@ import net.eucalypto.decorator.condiments.Whip;
 public class StarbuzzCoffeeMain {
 
     public static void main(String[] args) {
+        setSizeBamboozle();
+    }
+
+    private static void setSizeBamboozle() {
+        Beverage espresso = new Espresso();
+
+        System.out.println(espresso.getSize());
+
+        espresso.setSize(Beverage.Size.GRANDE);
+
+        System.out.println(espresso.getSize());
+
+        espresso = new Soy(espresso);
+
+        System.out.println(espresso.getSize());
+
+    }
+
+    private static void happyPath() {
         Beverage beverage1 = new Espresso();
 
         print(beverage1);
@@ -28,7 +47,6 @@ public class StarbuzzCoffeeMain {
         beverage3 = new Mocha(beverage3);
         beverage3 = new Whip(beverage3);
         print(beverage3);
-
     }
 
     private static void print(Beverage beverage) {
