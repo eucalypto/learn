@@ -1,53 +1,27 @@
 package net.eucalypto.stack;
 
-public class Stack {
-    private int size = 0;
-    private int capacity;
-    private int[] elements;
+public interface Stack {
+    boolean isEmpty();
 
-    private Stack(int capacity) {
-        this.capacity = capacity;
-        elements = new int[capacity];
+    int getSize();
+
+    void push(int element);
+
+    int pop();
+
+    int top();
+
+    Integer find(int element);
+
+    class Overflow extends RuntimeException {
     }
 
-    public static Stack Make(int capacity) {
-        if (capacity < 0)
-            throw new IllegalCapacity();
-
-        return new Stack(capacity);
+    class Underflow extends RuntimeException {
     }
 
-    public boolean isEmpty() {
-        return size == 0;
+    class IllegalCapacity extends RuntimeException {
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void push(int element) {
-        if (size == capacity)
-            throw new Overflow();
-
-        elements[size] = element;
-        size++;
-    }
-
-    public int pop() {
-        if (size == 0)
-            throw new Underflow();
-
-        int currentElement = elements[size - 1];
-        size--;
-        return currentElement;
-    }
-
-    public static class Overflow extends RuntimeException {
-    }
-
-    public static class Underflow extends RuntimeException {
-    }
-
-    public static class IllegalCapacity extends RuntimeException {
+    class Empty extends RuntimeException {
     }
 }

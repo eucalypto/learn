@@ -11,7 +11,7 @@ public class StackTest {
 
     @BeforeEach
     void setUp() {
-        stack = Stack.Make(2);
+        stack = BoundedStack.Make(2);
     }
 
     @Test
@@ -66,13 +66,46 @@ public class StackTest {
     @Test
     void whenCreatingStackWithNegativeSize_ThrowIllegalCapacity() {
         assertThrows(Stack.IllegalCapacity.class, () ->
-                Stack.Make(-1));
+                BoundedStack.Make(-1));
     }
 
     @Test
     void whenCreatingStackWithZeroCapacity_AnyPushShouldOverflow() {
-        stack = Stack.Make(0);
-        assertThrows(Stack.Overflow.class, () ->
+        stack = BoundedStack.Make(0);
+        assertThrows(BoundedStack.Overflow.class, () ->
                 stack.push(1));
     }
+
+    @Test
+    void whenOneIsPushed_OneIsOnTop() {
+        stack.push(1);
+        assertEquals(1, stack.top());
+    }
+
+    @Test
+    void whenStackIsEmpty_topThrowsEmpty() {
+        assertThrows(Stack.Empty.class, () ->
+                stack.top());
+    }
+
+    @Test
+    void withZeroCapacityStack_topThrowsEmpty() {
+        stack = BoundedStack.Make(0);
+        assertThrows(Stack.Empty.class, () ->
+                stack.top());
+    }
+
+    @Test
+    void givenStackWithOneTwoPushed_findOneAndTwo() {
+        stack.push(1);
+        stack.push(2);
+        assertEquals(1, stack.find(1));
+        assertEquals(0, stack.find(2));
+    }
+
+    @Test
+    void givenStackWithNo2_findReturnsNull() {
+        assertNull(stack.find(2));
+    }
+
 }
