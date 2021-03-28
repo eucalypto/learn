@@ -51,6 +51,12 @@ public class NameInverterTest {
   @Test
   void postNominals_stayAtEnd() {
     assertInverted("First Last Sr.", "Last, First Sr.");
+    assertInverted("First Last BS. PhD.", "Last, First BS. PhD.");
+  }
+
+  @Test
+  void integration() {
+    assertInverted("  John Doe     III   esq.    ", "Doe, John III esq.");
   }
 
   private String invertName(String name) {
@@ -64,15 +70,32 @@ public class NameInverterTest {
       return nameParts.get(0);
     }
 
-    if (isHonorific(nameParts.get(0))) {
-      nameParts.remove(0);
-    }
+    removeHonorificsFrom(nameParts);
 
     if (nameParts.size() > 2) {
-      return nameParts.get(1) + ", " + nameParts.get(0) + " " + nameParts.get(2);
+      return getFormattedNameWithPostNominals(nameParts);
     }
 
     return nameParts.get(1) + ", " + nameParts.get(0);
+  }
+
+  private String getFormattedNameWithPostNominals(ArrayList<String> nameParts) {
+    var returnString = new StringBuilder();
+    returnString.append(nameParts.get(1))
+        .append(", ")
+        .append(nameParts.get(0));
+
+    for (int i = 2; i < nameParts.size(); i++) {
+      returnString.append(" ").append(nameParts.get(i));
+    }
+
+    return returnString.toString();
+  }
+
+  private void removeHonorificsFrom(ArrayList<String> nameParts) {
+    if (isHonorific(nameParts.get(0))) {
+      nameParts.remove(0);
+    }
   }
 
   private boolean isHonorific(String word) {
@@ -80,6 +103,6 @@ public class NameInverterTest {
   }
 
   private ArrayList<String> getNameParts(String name) {
-    return new ArrayList<String>(Arrays.asList(name.strip().split("\\s+")));
+    return new ArrayList<>(Arrays.asList(name.strip().split("\\s+")));
   }
 }
