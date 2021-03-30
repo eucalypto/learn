@@ -15,8 +15,10 @@ class CreateMessageActivity : AppCompatActivity() {
     fun onSendMessage(view: View) {
         val editText: EditText = findViewById(R.id.message)
         val messageText = editText.text.toString()
-        val intent = Intent(this, ReceiveMessageActivity::class.java)
-        intent.putExtra(ReceiveMessageActivity.EXTRA_MESSAGE, messageText)
+
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra(Intent.EXTRA_TEXT, messageText)
 
         startActivity(intent)
     }
