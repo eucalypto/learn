@@ -20,6 +20,9 @@ class CreateMessageActivity : AppCompatActivity() {
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, messageText)
 
-        startActivity(intent)
+        val chooserTitle = getString(R.string.chooser)
+        val chosenIntent = Intent.createChooser(intent, chooserTitle)
+
+        startActivity(chosenIntent)
     }
 }
