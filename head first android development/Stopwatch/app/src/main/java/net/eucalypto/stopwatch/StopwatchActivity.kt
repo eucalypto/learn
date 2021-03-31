@@ -17,10 +17,14 @@ class StopwatchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stopwatch)
 
+        savedInstanceState?.let {
+            restoreInstanceState(it)
+        }
+
         runTimer()
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+    private fun restoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         seconds = savedInstanceState.getInt(SECONDS_KEY)
         running = savedInstanceState.getBoolean(RUNNING_KEY)
