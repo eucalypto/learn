@@ -16,7 +16,19 @@ class StopwatchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stopwatch)
 
-        runTimer();
+        runTimer()
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        seconds = savedInstanceState.getInt(SECONDS_KEY)
+        running = savedInstanceState.getBoolean(RUNNING_KEY)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SECONDS_KEY, seconds)
+        outState.putBoolean(RUNNING_KEY, running)
+        super.onSaveInstanceState(outState)
     }
 
     private fun runTimer() {
@@ -53,5 +65,10 @@ class StopwatchActivity : AppCompatActivity() {
         running = false
 
         seconds = 0
+    }
+
+    companion object {
+        const val SECONDS_KEY = "seconds"
+        const val RUNNING_KEY = "running"
     }
 }
