@@ -11,6 +11,7 @@ class StopwatchActivity : AppCompatActivity() {
 
     private var seconds = 0
     private var running = false
+    private var stoppedByAndroid = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,11 +24,13 @@ class StopwatchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         seconds = savedInstanceState.getInt(SECONDS_KEY)
         running = savedInstanceState.getBoolean(RUNNING_KEY)
+        stoppedByAndroid = savedInstanceState.getBoolean(STOPPED_BY_ANDROID_KEY)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(SECONDS_KEY, seconds)
         outState.putBoolean(RUNNING_KEY, running)
+        outState.putBoolean(STOPPED_BY_ANDROID_KEY, stoppedByAndroid)
         super.onSaveInstanceState(outState)
     }
 
@@ -53,6 +56,22 @@ class StopwatchActivity : AppCompatActivity() {
         })
     }
 
+    override fun onStop() {
+        super.onStop()
+        if (running) {
+            stoppedByAndroid = true
+        }
+        running = false
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (stoppedByAndroid) {
+            running = true
+            stoppedByAndroid = false
+        }
+    }
+
     fun onClickStart(view: View) {
         running = true
     }
@@ -68,7 +87,8 @@ class StopwatchActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val SECONDS_KEY = "seconds"
-        const val RUNNING_KEY = "running"
+        private const val SECONDS_KEY = "seconds"
+        private const val RUNNING_KEY = "running"
+        private const val STOPPED_BY_ANDROID_KEY = "stoppedByAndroid"
     }
 }
