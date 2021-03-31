@@ -60,17 +60,17 @@ class StopwatchActivity : AppCompatActivity() {
         })
     }
 
-    override fun onStop() {
-        super.onStop()
-        wasRunning = running
-        running = false
-    }
-
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         if (wasRunning) {
             running = true
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        wasRunning = running
+        running = false
     }
 
     fun onClickStart(view: View) {
