@@ -3,4 +3,7 @@
     <string name="to_hint">To</string>
     <string name="send_button">Send</string>
     <string name="message_hint">Message…</string>
+    <string name="duck_content_description">a duck</string>
+    <string name="duck_text_view">It\'s a duck!</string>
+    <string name="not_a_real_one">(not a real one)</string>
 </resources>
