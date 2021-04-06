@@ -6,4 +6,8 @@
     <string name="duck_content_description">a duck</string>
     <string name="duck_text_view">It\'s a duck!</string>
     <string name="not_a_real_one">(not a real one)</string>
+    <string name="example_textview">This is a TextView</string>
+    <string name="example_text_view_after_click">You already clicked this TextView</string>
+    <string name="text_view_clicked_toast">You just clicked the TextView</string>
+    <string name="example_edit_text_hint">Type something and see what happens</string>
 </resources>
