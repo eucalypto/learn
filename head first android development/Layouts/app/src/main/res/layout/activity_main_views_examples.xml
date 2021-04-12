@@ -17,12 +17,32 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_between_views_examples"
         android:ems="16"
         android:hint="@string/example_edit_text_hint"
         android:inputType="text"
         android:onClick="onEditTextClicked"
         tools:ignore="autofill" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_between_views_examples"
+        android:onClick="onToggleButtonClicked"
+        android:textOff="@string/toggle_button_off"
+        android:textOn="@string/toggle_button_on" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onSwitchCompatClicked"
+        android:text="@string/example_switch" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onCheckBoxClicked"
+        android:text="@string/checkbox" />
 
 
 </LinearLayout>

@@ -10,4 +10,8 @@
     <string name="example_text_view_after_click">You already clicked this TextView</string>
     <string name="text_view_clicked_toast">You just clicked the TextView</string>
     <string name="example_edit_text_hint">Type something and see what happens</string>
+    <string name="toggle_button_on">Toggled</string>
+    <string name="toggle_button_off">Not On</string>
+    <string name="checkbox">Bacon</string>
+    <string name="example_switch">Lights</string>
 </resources>
