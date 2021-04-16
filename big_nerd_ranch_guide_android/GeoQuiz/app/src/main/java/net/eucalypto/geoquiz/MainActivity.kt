@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
 
@@ -16,21 +17,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var questionTextView: TextView
 
-    private val questionsBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true)
-    )
-
-    private var currentIndex = 0
+    private val viewModel by lazy {
+        ViewModelProvider(this).get(QuizViewModel::class.java)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Log.d(TAG, "onCreate() called")
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -49,11 +45,13 @@ class MainActivity : AppCompatActivity() {
         updateQuestion()
 
         nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionsBank.size
+            viewModel.moveToNextQuestion()
             updateQuestion()
         }
 
-        Log.d(TAG, "onCreate() called")
+//        Log.d(TAG, "got this model to work with: $viewModel")
+
+
     }
 
     override fun onStart() {
@@ -82,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionsBank[currentIndex].answer
+        val correctAnswer = viewModel.currentQuestionAnswer
         val isCorrect = (userAnswer == correctAnswer)
         val toastTextId = if (isCorrect) R.string.correct_toast else R.string.incorrect_toast
         Toast.makeText(this, toastTextId, Toast.LENGTH_SHORT).show()
@@ -90,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun updateQuestion() {
-        val questionTextResId = questionsBank[currentIndex].textResID
+        val questionTextResId = viewModel.currentQuestionTextResId
         questionTextView.setText(questionTextResId)
     }
 }
