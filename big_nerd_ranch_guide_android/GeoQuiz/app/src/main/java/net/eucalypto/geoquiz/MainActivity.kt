@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
+private const val KEY_CURRENT_INDEX = "current_index"
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +28,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         Log.d(TAG, "onCreate() called")
+
+        savedInstanceState?.let {
+            viewModel.currentIndex = it.getInt(KEY_CURRENT_INDEX)
+            Log.d(TAG, "restored state from savedInstanceState")
+        }
+
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -49,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
         }
 
-//        Log.d(TAG, "got this model to work with: $viewModel")
+        Log.d(TAG, "got this model to work with: $viewModel")
 
 
     }
@@ -72,6 +79,12 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "onStop() called")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_CURRENT_INDEX, viewModel.currentIndex)
+        Log.d(TAG, "save state in onSaveInstanceState()")
     }
 
     override fun onDestroy() {

@@ -1,5 +1,6 @@
 package net.eucalypto.geoquiz
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 
 private const val TAG = "QuizViewModel"
@@ -15,7 +16,7 @@ class QuizViewModel : ViewModel() {
         Question(R.string.question_asia, true)
     )
 
-    private var currentIndex = 0
+    var currentIndex = 0
 
     val currentQuestionAnswer: Boolean
         get() = questionsBank[currentIndex].answer
@@ -25,5 +26,15 @@ class QuizViewModel : ViewModel() {
 
     fun moveToNextQuestion() {
         currentIndex = (currentIndex + 1) % questionsBank.size
+    }
+
+
+    init {
+        Log.d(TAG, "instance of QuizViewModel has been created: $this")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(TAG, "instance of QuizViewModel will be destroyed: $this")
     }
 }
