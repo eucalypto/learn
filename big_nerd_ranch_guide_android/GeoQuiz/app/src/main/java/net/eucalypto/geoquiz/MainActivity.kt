@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
     private lateinit var questionTextView: TextView
+    private lateinit var cheatButton: Button
 
     private val viewModel by lazy {
         ViewModelProvider(this).get(QuizViewModel::class.java)
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
+        cheatButton = findViewById(R.id.cheat_button)
 
 
         trueButton.setOnClickListener {
@@ -54,6 +56,12 @@ class MainActivity : AppCompatActivity() {
         nextButton.setOnClickListener {
             viewModel.moveToNextQuestion()
             updateQuestion()
+        }
+
+        cheatButton.setOnClickListener {
+            val answerIsTrue = viewModel.currentQuestionAnswer
+            val intent = CheatActivity.createIntent(this, answerIsTrue)
+            startActivity(intent)
         }
 
         Log.d(TAG, "got this model to work with: $viewModel")
