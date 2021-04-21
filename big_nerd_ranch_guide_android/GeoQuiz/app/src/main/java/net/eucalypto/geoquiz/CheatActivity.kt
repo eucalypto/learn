@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 private const val KEY_EXTRA_ANSWER_IS_TRUE = "net.eucalypto.geoquiz.answer_is_true"
+const val KEY_EXTRA_ANSWER_SHOWN = "net.eucalypto.geoquiz.answer_shown"
 
 class CheatActivity : AppCompatActivity() {
 
@@ -32,13 +33,22 @@ class CheatActivity : AppCompatActivity() {
         showAnswerButton = findViewById(R.id.show_answer_button)
 
         showAnswerButton.setOnClickListener {
-            val answerTextId = when {
-                answerIsTrue -> R.string.true_button
-                else -> R.string.false_button
-            }
-            answerTextView.setText(answerTextId)
+            answerTextView.setText(
+                when {
+                    answerIsTrue -> R.string.true_button
+                    else -> R.string.false_button
+                }
+            )
+            setAnswerShownResult(true)
         }
 
 
+    }
+
+    private fun setAnswerShownResult(isAnswerShown: Boolean) {
+        val data = Intent().apply {
+            putExtra(KEY_EXTRA_ANSWER_SHOWN, isAnswerShown)
+        }
+        setResult(RESULT_OK, data)
     }
 }

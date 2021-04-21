@@ -1,5 +1,7 @@
 package net.eucalypto.geoquiz
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
 private const val KEY_CURRENT_INDEX = "current_index"
+private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         cheatButton.setOnClickListener {
             val answerIsTrue = viewModel.currentQuestionAnswer
             val intent = CheatActivity.createIntent(this, answerIsTrue)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_CHEAT)
         }
 
         Log.d(TAG, "got this model to work with: $viewModel")
@@ -89,6 +92,18 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onStop() called")
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            viewModel.isCheater = data?.getBooleanExtra(KEY_EXTRA_ANSWER_SHOWN, false) ?: false
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_CURRENT_INDEX, viewModel.currentIndex)
@@ -103,10 +118,13 @@ class MainActivity : AppCompatActivity() {
     private fun checkAnswer(userAnswer: Boolean) {
         val correctAnswer = viewModel.currentQuestionAnswer
         val isCorrect = (userAnswer == correctAnswer)
-        val toastTextId = if (isCorrect) R.string.correct_toast else R.string.incorrect_toast
+        val toastTextId = when {
+            viewModel.isCheater -> R.string.judgment_toast
+            isCorrect -> R.string.correct_toast
+            else -> R.string.incorrect_toast
+        }
         Toast.makeText(this, toastTextId, Toast.LENGTH_SHORT).show()
     }
-
 
     private fun updateQuestion() {
         val questionTextResId = viewModel.currentQuestionTextResId
