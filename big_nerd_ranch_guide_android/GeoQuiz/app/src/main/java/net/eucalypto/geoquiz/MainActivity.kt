@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
 private const val KEY_CURRENT_INDEX = "current_index"
+private const val KEY_IS_CHEATER = "has_cheated"
 private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
@@ -33,11 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "onCreate() called")
 
-        savedInstanceState?.let {
-            viewModel.currentIndex = it.getInt(KEY_CURRENT_INDEX)
-            Log.d(TAG, "restored state from savedInstanceState")
-        }
-
+        restoreInstanceState(savedInstanceState)
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -72,6 +69,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun restoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            viewModel.currentIndex = it.getInt(KEY_CURRENT_INDEX)
+            viewModel.isCheater = it.getBoolean(KEY_IS_CHEATER)
+            Log.d(TAG, "restored state from savedInstanceState")
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         Log.d(TAG, "onStart() called")
@@ -100,6 +105,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (requestCode == REQUEST_CODE_CHEAT) {
+            if (viewModel.isCheater) {
+                return // stay cheater
+            }
             viewModel.isCheater = data?.getBooleanExtra(KEY_EXTRA_ANSWER_SHOWN, false) ?: false
         }
     }
@@ -107,6 +115,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_CURRENT_INDEX, viewModel.currentIndex)
+        outState.putBoolean(KEY_IS_CHEATER, viewModel.isCheater)
         Log.d(TAG, "save state in onSaveInstanceState()")
     }
 

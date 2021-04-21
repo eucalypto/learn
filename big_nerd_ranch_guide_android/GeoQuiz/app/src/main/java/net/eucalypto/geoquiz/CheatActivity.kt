@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 private const val KEY_EXTRA_ANSWER_IS_TRUE = "net.eucalypto.geoquiz.answer_is_true"
 const val KEY_EXTRA_ANSWER_SHOWN = "net.eucalypto.geoquiz.answer_shown"
+private const val KEY_HAS_CHEATED = "has_cheated"
 
 class CheatActivity : AppCompatActivity() {
 
@@ -23,10 +24,13 @@ class CheatActivity : AppCompatActivity() {
     private var answerIsTrue = false
     private lateinit var answerTextView: TextView
     private lateinit var showAnswerButton: Button
+    private var hasCheated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cheat)
+
+        restoreInstanceState(savedInstanceState)
 
         answerIsTrue = intent.getBooleanExtra(KEY_EXTRA_ANSWER_IS_TRUE, false)
         answerTextView = findViewById(R.id.answer_text_view)
@@ -39,13 +43,24 @@ class CheatActivity : AppCompatActivity() {
                     else -> R.string.false_button
                 }
             )
-            setAnswerShownResult(true)
+            hasCheated = true
+            setResultAnswerShown(hasCheated)
         }
-
-
     }
 
-    private fun setAnswerShownResult(isAnswerShown: Boolean) {
+    private fun restoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            hasCheated = it.getBoolean(KEY_HAS_CHEATED)
+            setResultAnswerShown(hasCheated)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_HAS_CHEATED, hasCheated)
+    }
+
+    private fun setResultAnswerShown(isAnswerShown: Boolean) {
         val data = Intent().apply {
             putExtra(KEY_EXTRA_ANSWER_SHOWN, isAnswerShown)
         }
