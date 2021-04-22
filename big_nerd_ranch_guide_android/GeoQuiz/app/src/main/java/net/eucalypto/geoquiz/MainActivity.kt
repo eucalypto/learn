@@ -1,6 +1,7 @@
 package net.eucalypto.geoquiz
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         Log.d(TAG, "onCreate() called")
+        Log.d(TAG, "got this model to work with: $viewModel")
 
         restoreInstanceState(savedInstanceState)
 
@@ -61,12 +63,14 @@ class MainActivity : AppCompatActivity() {
         cheatButton.setOnClickListener {
             val answerIsTrue = viewModel.currentQuestionAnswer
             val intent = CheatActivity.createIntent(this, answerIsTrue)
-            startActivityForResult(intent, REQUEST_CODE_CHEAT)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                Log.d(TAG, "activating new cool API 23 feature of transition animation")
+                val options = ActivityOptions.makeClipRevealAnimation(it, 0, 0, it.width, it.height)
+                startActivityForResult(intent, REQUEST_CODE_CHEAT, options.toBundle())
+            } else {
+                startActivityForResult(intent, REQUEST_CODE_CHEAT)
+            }
         }
-
-        Log.d(TAG, "got this model to work with: $viewModel")
-
-
     }
 
     private fun restoreInstanceState(savedInstanceState: Bundle?) {
