@@ -23,12 +23,6 @@ class CrimeListFragment : Fragment() {
         ViewModelProvider(requireActivity()).get(CrimeListViewModel::class.java)
     }
 
-    companion object {
-        fun newInstance(): CrimeListFragment {
-            return CrimeListFragment()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,25 +31,23 @@ class CrimeListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_crime_list, container, false)
     }
 
-    private lateinit var crimeRecyclerView: RecyclerView
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
-        crimeRecyclerView.layoutManager = LinearLayoutManager(context)
-        crimeRecyclerView.adapter = CrimeAdapter(emptyList())
-        viewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
-            crimes?.let {
-                Log.d(TAG, "Got crimes ${crimes.size}")
-                updateUI(crimes)
-            }
-        }
+        setUpRecyclerView(view)
     }
 
-    private fun updateUI(crimes: List<Crime>) {
-        val adapter = CrimeAdapter(crimes)
-        crimeRecyclerView.adapter = adapter
+    private fun setUpRecyclerView(view: View) {
+        val crimeRecyclerView: RecyclerView = view.findViewById(R.id.crime_recycler_view)
+        crimeRecyclerView.layoutManager = LinearLayoutManager(context)
+        crimeRecyclerView.adapter = CrimeAdapter(emptyList())
+        viewModel.crimeList.observe(viewLifecycleOwner) { crimes ->
+            crimes?.let {
+                Log.d(TAG, "Got crimes ${crimes.size}")
+                val adapter = CrimeAdapter(crimes)
+                crimeRecyclerView.adapter = adapter
+            }
+        }
     }
 
     private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view) {
