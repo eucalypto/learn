@@ -1,18 +1,11 @@
 package net.eucalypto.criminalintent.crimelist
 
 import androidx.lifecycle.ViewModel
-import net.eucalypto.criminalintent.Crime
+import net.eucalypto.criminalintent.CrimeRepository
 
 class CrimeListViewModel : ViewModel() {
 
-    val crimes = mutableListOf<Crime>()
+    private val crimeRepository = CrimeRepository.get()
+    val crimeListLiveData = crimeRepository.getCrimes()
 
-    val crimeCount
-        get() = crimes.size
-
-    init {
-        for (i in 0 until 100) {
-            crimes += Crime(title = "Crime #$i", isSolved = i % 2 == 0)
-        }
-    }
 }
