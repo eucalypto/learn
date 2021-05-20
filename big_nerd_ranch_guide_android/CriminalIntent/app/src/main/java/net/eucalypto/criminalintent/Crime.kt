@@ -1,11 +1,9 @@
 package net.eucalypto.criminalintent
 
-import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import timber.log.Timber
 import java.util.*
-
-private const val TAG = "Crime"
 
 @Entity
 data class Crime(
@@ -16,6 +14,6 @@ data class Crime(
     var isSolved: Boolean = false
 ) {
     init {
-        Log.d(TAG, "Crime Data class object created: $this")
+        Timber.d("Crime Data class object created: $this")
     }
 }

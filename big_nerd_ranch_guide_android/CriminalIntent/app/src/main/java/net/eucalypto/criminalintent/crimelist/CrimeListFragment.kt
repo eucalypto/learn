@@ -1,26 +1,32 @@
 package net.eucalypto.criminalintent.crimelist
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.eucalypto.criminalintent.Crime
 import net.eucalypto.criminalintent.R
-
-private const val TAG = "CrimeListFragment"
+import timber.log.Timber
+import java.util.*
 
 class CrimeListFragment : Fragment() {
 
     private val viewModel by lazy {
         ViewModelProvider(requireActivity()).get(CrimeListViewModel::class.java)
+    }
+
+
+    private var callbacks: Callbacks? = null
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
     }
 
     override fun onCreateView(
@@ -43,11 +49,17 @@ class CrimeListFragment : Fragment() {
         crimeRecyclerView.adapter = CrimeAdapter(emptyList())
         viewModel.crimeList.observe(viewLifecycleOwner) { crimes ->
             crimes?.let {
-                Log.d(TAG, "Got crimes ${crimes.size}")
+                Timber.d("Got crimes ${crimes.size}")
                 val adapter = CrimeAdapter(crimes)
                 crimeRecyclerView.adapter = adapter
             }
         }
+    }
+
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -64,7 +76,7 @@ class CrimeListFragment : Fragment() {
             solvedImageView.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
             itemView.setOnClickListener {
-                Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_SHORT).show()
+                callbacks?.onCrimeSelected(crime.id)
             }
         }
     }
@@ -85,6 +97,13 @@ class CrimeListFragment : Fragment() {
             return crimes.size
         }
 
+    }
+
+    /**
+     * Required interface for hosting activities
+     */
+    interface Callbacks {
+        fun onCrimeSelected(crimeId: UUID)
     }
 
 }
