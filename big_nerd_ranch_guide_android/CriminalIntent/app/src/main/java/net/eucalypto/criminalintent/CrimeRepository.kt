@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import net.eucalypto.criminalintent.database.CrimeDatabase
 import java.util.*
+import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "crime-database"
 
@@ -19,6 +20,22 @@ class CrimeRepository private constructor(context: Context) {
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
 
     fun getCrime(uuid: UUID): LiveData<Crime?> = crimeDao.getCrime(uuid)
+
+
+    private val executor = Executors.newSingleThreadExecutor()
+
+    fun updateCrime(crime: Crime) {
+        executor.execute {
+            crimeDao.updateCrime(crime)
+        }
+    }
+
+    fun insertCrime(crime: Crime) {
+        executor.execute {
+            crimeDao.insertCrime(crime)
+        }
+    }
+
 
     companion object {
         private var INSTANCE: CrimeRepository? = null

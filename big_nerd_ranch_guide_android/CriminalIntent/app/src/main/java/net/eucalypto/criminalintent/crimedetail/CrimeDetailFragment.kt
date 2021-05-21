@@ -83,6 +83,12 @@ class CrimeDetailFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        Timber.d("Update crime in database: $crime")
+        viewModel.saveCrime(crime)
+    }
+
     private fun createTitleWatcher(): TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             // TODO("Not yet implemented")
