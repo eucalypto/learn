@@ -11,12 +11,10 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import net.eucalypto.criminalintent.Crime
 import net.eucalypto.criminalintent.R
 import timber.log.Timber
-import java.util.*
-
-private const val ARG_CRIME_ID = "crime_id"
 
 class CrimeDetailFragment : Fragment() {
 
@@ -24,18 +22,9 @@ class CrimeDetailFragment : Fragment() {
         ViewModelProvider(requireActivity()).get(CrimeDetailViewModel::class.java)
     }
 
-
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val crimeId = arguments?.getSerializable(ARG_CRIME_ID) as UUID
-        Timber.d("args bundle crime ID: $crimeId")
-        viewModel.loadCrime(crimeId)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +37,15 @@ class CrimeDetailFragment : Fragment() {
 
     private lateinit var crime: Crime
 
+    private val args: CrimeDetailFragmentArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val crimeId = args.crimeId
+        Timber.d("Args gave crimeId: $crimeId")
+        viewModel.loadCrime(crimeId)
+
 
         titleField = view.findViewById(R.id.crime_title)
         dateButton = view.findViewById(R.id.crime_date)
@@ -103,19 +99,4 @@ class CrimeDetailFragment : Fragment() {
         }
 
     }
-
-
-    companion object {
-
-        fun newInstance(crimeId: UUID): CrimeDetailFragment {
-            val args = Bundle().apply {
-                putSerializable(ARG_CRIME_ID, crimeId)
-            }
-            return CrimeDetailFragment().apply {
-                arguments = args
-            }
-        }
-
-    }
-
 }

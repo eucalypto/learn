@@ -1,6 +1,5 @@
 package net.eucalypto.criminalintent.crimelist
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.eucalypto.criminalintent.Crime
@@ -20,13 +20,6 @@ class CrimeListFragment : Fragment() {
 
     private val viewModel by lazy {
         ViewModelProvider(requireActivity()).get(CrimeListViewModel::class.java)
-    }
-
-
-    private var callbacks: Callbacks? = null
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = context as Callbacks?
     }
 
     override fun onCreateView(
@@ -57,33 +50,8 @@ class CrimeListFragment : Fragment() {
     }
 
 
-    override fun onDetach() {
-        super.onDetach()
-        callbacks = null
-    }
-
-    private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        private val titleTextView: TextView = itemView.findViewById(R.id.crime_title)
-        private val dateTextView: TextView = itemView.findViewById(R.id.crime_date)
-        private val solvedImageView: ImageView = itemView.findViewById(R.id.crime_solved)
-        private lateinit var crime: Crime
-
-        fun bind(crime: Crime) {
-            this.crime = crime
-            titleTextView.text = crime.title
-            dateTextView.text = crime.date.toString()
-            solvedImageView.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
-
-            itemView.setOnClickListener {
-                callbacks?.onCrimeSelected(crime.id)
-            }
-        }
-    }
-
     private inner class CrimeAdapter(var crimes: List<Crime>) :
-        RecyclerView.Adapter<CrimeHolder>() {
-
+        RecyclerView.Adapter<CrimeAdapter.CrimeHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
             val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
             return CrimeHolder(view)
@@ -97,13 +65,32 @@ class CrimeListFragment : Fragment() {
             return crimes.size
         }
 
+        private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+            private val titleTextView: TextView = itemView.findViewById(R.id.crime_title)
+            private val dateTextView: TextView = itemView.findViewById(R.id.crime_date)
+            private val solvedImageView: ImageView = itemView.findViewById(R.id.crime_solved)
+            private lateinit var crime: Crime
+
+            fun bind(crime: Crime) {
+                this.crime = crime
+                titleTextView.text = crime.title
+                dateTextView.text = crime.date.toString()
+                solvedImageView.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+
+                itemView.setOnClickListener {
+                    onCrimeItemClicked(crime.id)
+                }
+            }
+        }
     }
 
-    /**
-     * Required interface for hosting activities
-     */
-    interface Callbacks {
-        fun onCrimeSelected(crimeId: UUID)
+    private fun onCrimeItemClicked(crimeId: UUID) {
+        val action = CrimeListFragmentDirections
+            .actionCrimeListFragmentToCrimeDetailFragment(crimeId)
+        val navHostFragment =
+            parentFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as Fragment
+        val navController = navHostFragment.findNavController()
+        navController.navigate(action)
     }
-
 }
