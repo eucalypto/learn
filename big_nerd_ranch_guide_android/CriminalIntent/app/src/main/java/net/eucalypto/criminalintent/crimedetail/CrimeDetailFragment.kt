@@ -18,17 +18,9 @@ import timber.log.Timber
 import java.util.*
 
 private const val DIALOG_DATE = "DialogDate"
-private const val REQUEST_DATE = 0
+const val REQUEST_KEY_DATE = "date_request_key"
 
-class CrimeDetailFragment : Fragment(), DatePickerFragment.Callbacks {
-
-    private val viewModel by lazy {
-        ViewModelProvider(requireActivity()).get(CrimeDetailViewModel::class.java)
-    }
-
-    private lateinit var titleField: EditText
-    private lateinit var dateButton: Button
-    private lateinit var solvedCheckBox: CheckBox
+class CrimeDetailFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,9 +30,13 @@ class CrimeDetailFragment : Fragment(), DatePickerFragment.Callbacks {
         return inflater.inflate(R.layout.fragment_crime, container, false)
     }
 
-
+    private val viewModel by lazy {
+        ViewModelProvider(requireActivity()).get(CrimeDetailViewModel::class.java)
+    }
+    private lateinit var titleField: EditText
+    private lateinit var dateButton: Button
+    private lateinit var solvedCheckBox: CheckBox
     private lateinit var crime: Crime
-
     private val args: CrimeDetailFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,17 +46,42 @@ class CrimeDetailFragment : Fragment(), DatePickerFragment.Callbacks {
         Timber.d("Args gave crimeId: $crimeId")
         viewModel.loadCrime(crimeId)
 
+        getReferencesToViews(view)
+        setCrimeLiveDataObserver()
+        setDateButtonClickListener()
+        setDatePickerResultListener()
+    }
 
+    private fun getReferencesToViews(view: View) {
         titleField = view.findViewById(R.id.crime_title)
         dateButton = view.findViewById(R.id.crime_date)
-
         solvedCheckBox = view.findViewById(R.id.crime_solved)
+    }
 
+    private fun setCrimeLiveDataObserver() {
         viewModel.crimeLiveData.observe(viewLifecycleOwner) { crime ->
             crime?.let {
                 this.crime = crime
                 updateUI()
             }
+        }
+    }
+
+    private fun setDateButtonClickListener() {
+        dateButton.setOnClickListener {
+            DatePickerFragment.newInstance(crime.date).apply {
+                show(this@CrimeDetailFragment.parentFragmentManager, DIALOG_DATE)
+            }
+        }
+    }
+
+    private fun setDatePickerResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            REQUEST_KEY_DATE,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            crime.date = bundle.getSerializable(RESULT_KEY_DATE) as Date
+            updateUI()
         }
     }
 
@@ -79,13 +100,6 @@ class CrimeDetailFragment : Fragment(), DatePickerFragment.Callbacks {
         titleField.addTextChangedListener(createTitleWatcher())
         solvedCheckBox.setOnCheckedChangeListener { _, isChecked ->
             crime.isSolved = isChecked
-        }
-
-        dateButton.setOnClickListener {
-            DatePickerFragment.newInstance(crime.date).apply {
-                setTargetFragment(this@CrimeDetailFragment, REQUEST_DATE)
-                show(this@CrimeDetailFragment.parentFragmentManager, DIALOG_DATE)
-            }
         }
     }
 
@@ -108,10 +122,5 @@ class CrimeDetailFragment : Fragment(), DatePickerFragment.Callbacks {
             // TODO("Not yet implemented")
         }
 
-    }
-
-    override fun onDateSelected(date: Date) {
-        crime.date = date
-        updateUI()
     }
 }
