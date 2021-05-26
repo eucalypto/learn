@@ -17,8 +17,8 @@ import net.eucalypto.criminalintent.R
 import timber.log.Timber
 import java.util.*
 
-private const val DIALOG_DATE = "DialogDate"
-const val REQUEST_KEY_DATE = "date_request_key"
+private const val TAG_DIALOG_DATE = "DialogDate"
+private const val REQUEST_KEY_DATE = "date_request_key"
 
 class CrimeDetailFragment : Fragment() {
 
@@ -69,8 +69,8 @@ class CrimeDetailFragment : Fragment() {
 
     private fun setDateButtonClickListener() {
         dateButton.setOnClickListener {
-            DatePickerFragment.newInstance(crime.date).apply {
-                show(this@CrimeDetailFragment.parentFragmentManager, DIALOG_DATE)
+            DatePickerFragment.newInstance(crime.date, REQUEST_KEY_DATE).apply {
+                show(this@CrimeDetailFragment.parentFragmentManager, TAG_DIALOG_DATE)
             }
         }
     }
@@ -80,7 +80,7 @@ class CrimeDetailFragment : Fragment() {
             REQUEST_KEY_DATE,
             viewLifecycleOwner
         ) { _, bundle ->
-            crime.date = bundle.getSerializable(RESULT_KEY_DATE) as Date
+            crime.date = DatePickerFragment.getDateFrom(bundle)
             updateUI()
         }
     }
