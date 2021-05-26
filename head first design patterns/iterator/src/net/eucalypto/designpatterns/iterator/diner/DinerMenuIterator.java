@@ -1,9 +1,9 @@
 package net.eucalypto.designpatterns.iterator.diner;
 
-import net.eucalypto.designpatterns.iterator.Iterator;
+import java.util.Iterator;
 import net.eucalypto.designpatterns.iterator.MenuItem;
 
-public class DinerMenuIterator implements Iterator {
+public class DinerMenuIterator implements Iterator<MenuItem> {
 
   MenuItem[] items;
   int position = 0;

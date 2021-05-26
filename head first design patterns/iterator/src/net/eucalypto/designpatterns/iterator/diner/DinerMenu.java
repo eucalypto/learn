@@ -1,9 +1,10 @@
 package net.eucalypto.designpatterns.iterator.diner;
 
-import net.eucalypto.designpatterns.iterator.Iterator;
+import java.util.Iterator;
+import net.eucalypto.designpatterns.iterator.Menu;
 import net.eucalypto.designpatterns.iterator.MenuItem;
 
-public class DinerMenu {
+public class DinerMenu implements Menu {
 
   static final int MAX_ITEMS = 6;
   int numberOfItems = 0;
@@ -14,7 +15,7 @@ public class DinerMenu {
     populateMenu();
   }
 
-  public Iterator createIterator() {
+  public Iterator<MenuItem> createIterator() {
     return new DinerMenuIterator(menuItems);
   }
 

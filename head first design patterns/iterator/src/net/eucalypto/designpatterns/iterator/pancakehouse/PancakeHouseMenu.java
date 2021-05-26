@@ -1,11 +1,12 @@
 package net.eucalypto.designpatterns.iterator.pancakehouse;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import net.eucalypto.designpatterns.iterator.Iterator;
+import net.eucalypto.designpatterns.iterator.Menu;
 import net.eucalypto.designpatterns.iterator.MenuItem;
 
-public class PancakeHouseMenu {
+public class PancakeHouseMenu implements Menu {
 
   List<MenuItem> menuItems;
 
@@ -14,8 +15,8 @@ public class PancakeHouseMenu {
     populateMenu();
   }
 
-  public Iterator createIterator() {
-    return new PancakeHouseMenuIterator(menuItems);
+  public Iterator<MenuItem> createIterator() {
+    return menuItems.iterator();
   }
 
   private void populateMenu() {

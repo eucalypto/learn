@@ -1,16 +1,13 @@
 package net.eucalypto.designpatterns.iterator;
 
-import net.eucalypto.designpatterns.iterator.diner.DinerMenu;
-import net.eucalypto.designpatterns.iterator.pancakehouse.PancakeHouseMenu;
+import java.util.Iterator;
 
 public class Waitress {
 
-  PancakeHouseMenu pancakeHouseMenu;
-  DinerMenu dinerMenu;
+  Menu pancakeHouseMenu;
+  Menu dinerMenu;
 
-  public Waitress(
-      PancakeHouseMenu pancakeHouseMenu,
-      DinerMenu dinerMenu) {
+  public Waitress(Menu pancakeHouseMenu, Menu dinerMenu) {
     this.pancakeHouseMenu = pancakeHouseMenu;
     this.dinerMenu = dinerMenu;
   }
@@ -24,7 +21,7 @@ public class Waitress {
     printMenu(dinerIterator);
   }
 
-  private void printMenu(Iterator iterator) {
+  private void printMenu(Iterator<MenuItem> iterator) {
     while (iterator.hasNext()) {
       var menuItem = iterator.next();
       System.out.println(
