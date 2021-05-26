@@ -15,8 +15,12 @@ import androidx.navigation.fragment.navArgs
 import net.eucalypto.criminalintent.Crime
 import net.eucalypto.criminalintent.R
 import timber.log.Timber
+import java.util.*
 
-class CrimeDetailFragment : Fragment() {
+private const val DIALOG_DATE = "DialogDate"
+private const val REQUEST_DATE = 0
+
+class CrimeDetailFragment : Fragment(), DatePickerFragment.Callbacks {
 
     private val viewModel by lazy {
         ViewModelProvider(requireActivity()).get(CrimeDetailViewModel::class.java)
@@ -49,7 +53,6 @@ class CrimeDetailFragment : Fragment() {
 
         titleField = view.findViewById(R.id.crime_title)
         dateButton = view.findViewById(R.id.crime_date)
-        dateButton.isEnabled = false
 
         solvedCheckBox = view.findViewById(R.id.crime_solved)
 
@@ -77,6 +80,13 @@ class CrimeDetailFragment : Fragment() {
         solvedCheckBox.setOnCheckedChangeListener { _, isChecked ->
             crime.isSolved = isChecked
         }
+
+        dateButton.setOnClickListener {
+            DatePickerFragment.newInstance(crime.date).apply {
+                setTargetFragment(this@CrimeDetailFragment, REQUEST_DATE)
+                show(this@CrimeDetailFragment.parentFragmentManager, DIALOG_DATE)
+            }
+        }
     }
 
     override fun onStop() {
@@ -98,5 +108,10 @@ class CrimeDetailFragment : Fragment() {
             // TODO("Not yet implemented")
         }
 
+    }
+
+    override fun onDateSelected(date: Date) {
+        crime.date = date
+        updateUI()
     }
 }

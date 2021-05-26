@@ -89,7 +89,7 @@ class CrimeListFragment : Fragment() {
         val action = CrimeListFragmentDirections
             .actionCrimeListFragmentToCrimeDetailFragment(crimeId)
         val navHostFragment =
-            parentFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as Fragment
+            parentFragmentManager.findFragmentById(R.id.nav_host_fragment_container)!!
         val navController = navHostFragment.findNavController()
         navController.navigate(action)
     }
