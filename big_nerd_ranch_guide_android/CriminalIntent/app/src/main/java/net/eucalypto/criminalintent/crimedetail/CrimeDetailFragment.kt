@@ -11,13 +11,12 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import net.eucalypto.criminalintent.Crime
 import net.eucalypto.criminalintent.R
 import timber.log.Timber
-import java.util.*
 
-private const val TAG_DIALOG_DATE = "DialogDate"
 private const val REQUEST_KEY_DATE = "date_request_key"
 
 class CrimeDetailFragment : Fragment() {
@@ -69,10 +68,21 @@ class CrimeDetailFragment : Fragment() {
 
     private fun setDateButtonClickListener() {
         dateButton.setOnClickListener {
-            DatePickerFragment.newInstance(crime.date, REQUEST_KEY_DATE).apply {
-                show(this@CrimeDetailFragment.parentFragmentManager, TAG_DIALOG_DATE)
-            }
+            navigateToDatePickerDialog()
         }
+    }
+
+    private fun navigateToDatePickerDialog() {
+        val action =
+            CrimeDetailFragmentDirections
+                .actionCrimeDetailFragmentToDatePickerFragment(
+                    crime.date,
+                    REQUEST_KEY_DATE
+                )
+        val navController = parentFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_container)!!
+            .findNavController()
+        navController.navigate(action)
     }
 
     private fun setDatePickerResultListener() {
@@ -111,7 +121,7 @@ class CrimeDetailFragment : Fragment() {
 
     private fun createTitleWatcher(): TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            // TODO("Not yet implemented")
+            // Not needed
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -119,7 +129,7 @@ class CrimeDetailFragment : Fragment() {
         }
 
         override fun afterTextChanged(s: Editable?) {
-            // TODO("Not yet implemented")
+            // Not needed
         }
 
     }
