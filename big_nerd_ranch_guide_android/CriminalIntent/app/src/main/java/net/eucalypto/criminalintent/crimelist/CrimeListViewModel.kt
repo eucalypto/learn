@@ -10,4 +10,7 @@ class CrimeListViewModel : ViewModel() {
     private val crimeRepository = CrimeRepository.get()
     val crimeList: LiveData<List<Crime>> = crimeRepository.getCrimes()
 
+    fun addCrime(crime: Crime) {
+        crimeRepository.insertCrime(crime)
+    }
 }

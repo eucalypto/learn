@@ -1,9 +1,7 @@
 package net.eucalypto.criminalintent.crimelist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -20,6 +18,11 @@ class CrimeListFragment : Fragment() {
 
     private val viewModel by lazy {
         ViewModelProvider(requireActivity()).get(CrimeListViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -46,6 +49,23 @@ class CrimeListFragment : Fragment() {
                 val adapter = CrimeAdapter(crimes)
                 crimeRecyclerView.adapter = adapter
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_crime_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_crime -> {
+                val crime = Crime()
+                viewModel.addCrime(crime)
+                navigateToCrimeDetailFragment(crime.id)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -79,13 +99,13 @@ class CrimeListFragment : Fragment() {
                 solvedImageView.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
                 itemView.setOnClickListener {
-                    onCrimeItemClicked(crime.id)
+                    navigateToCrimeDetailFragment(crime.id)
                 }
             }
         }
     }
 
-    private fun onCrimeItemClicked(crimeId: UUID) {
+    private fun navigateToCrimeDetailFragment(crimeId: UUID) {
         val action = CrimeListFragmentDirections
             .actionCrimeListFragmentToCrimeDetailFragment(crimeId)
         val navHostFragment =
