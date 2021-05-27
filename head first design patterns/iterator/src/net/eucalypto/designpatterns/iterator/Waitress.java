@@ -1,30 +1,20 @@
 package net.eucalypto.designpatterns.iterator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class Waitress {
 
-  Menu pancakeHouseMenu;
-  Menu dinerMenu;
-  Menu cafeMenu;
+  List<Menu> menus = new ArrayList<>();
 
-  public Waitress(Menu pancakeHouseMenu, Menu dinerMenu,
-      Menu cafeMenu) {
-    this.pancakeHouseMenu = pancakeHouseMenu;
-    this.dinerMenu = dinerMenu;
-    this.cafeMenu = cafeMenu;
+  public Waitress(Menu... menus) {
+    this.menus.addAll(Arrays.asList(menus));
   }
 
   public void printMenu() {
-    var pancakeIterator = pancakeHouseMenu.createIterator();
-    var dinerIterator = dinerMenu.createIterator();
-    var cafeIterator = cafeMenu.createIterator();
-    System.out.println("MENU\n----\nBREAKFAST");
-    printMenu(pancakeIterator);
-    System.out.println("\nLUNCH");
-    printMenu(dinerIterator);
-    System.out.println("\nDINNER");
-    printMenu(cafeIterator);
+    menus.forEach(menu -> printMenu(menu.createIterator()));
   }
 
   private void printMenu(Iterator<MenuItem> iterator) {
@@ -35,6 +25,7 @@ public class Waitress {
               + menuItem.getPrice() + " -- "
               + menuItem.getDescription());
     }
+    System.out.println();
   }
 
   // other methods here
