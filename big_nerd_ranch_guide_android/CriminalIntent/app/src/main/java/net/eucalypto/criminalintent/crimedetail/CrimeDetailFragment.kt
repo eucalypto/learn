@@ -1,6 +1,5 @@
 package net.eucalypto.criminalintent.crimedetail
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -15,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,7 +25,6 @@ import net.eucalypto.criminalintent.R
 import timber.log.Timber
 
 private const val REQUEST_KEY_DATE = "date_request_key"
-private const val REQUEST_CODE_CONTACT = 1
 private const val DATE_FORMAT = "EEE, MMM, dd"
 
 class CrimeDetailFragment : Fragment() {
@@ -48,6 +48,31 @@ class CrimeDetailFragment : Fragment() {
     private lateinit var crime: Crime
     private val args: CrimeDetailFragmentArgs by navArgs()
 
+    private val getContactNameActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.PickContact()) { uri ->
+            processNameFromContactApp(uri)
+        }
+
+    private fun processNameFromContactApp(uri: Uri) {
+        val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+        val cursor = activity?.contentResolver?.query(
+            uri,
+            queryFields,
+            null,
+            null,
+            null
+        )
+        cursor?.use {
+            if (it.count == 0) return@use
+
+            it.moveToFirst()
+            val suspect = it.getString(0)
+            crime.suspect = suspect
+            viewModel.saveCrime(crime)
+            suspectButton.text = suspect
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,7 +85,7 @@ class CrimeDetailFragment : Fragment() {
         setDateButtonClickListener()
         setDatePickerResultListener()
         setCrimeReportButtonListener()
-        setSuspectButtonListener()
+        setUpSuspectButton()
     }
 
     private fun getReferencesToViews(view: View) {
@@ -122,23 +147,23 @@ class CrimeDetailFragment : Fragment() {
         }
     }
 
-    private fun setSuspectButtonListener() {
+    private fun setUpSuspectButton() {
         suspectButton.apply {
-            val pickContactIntent =
-                Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
             setOnClickListener {
-                startActivityForResult(pickContactIntent, REQUEST_CODE_CONTACT)
+                getContactNameActivityLauncher.launch()
             }
 
-            disableIfNoMatchingActivityFound(this, pickContactIntent)
+            disableIfNoContactsActivityFound(this)
         }
     }
 
-    private fun disableIfNoMatchingActivityFound(view: View, intent: Intent) {
+    private fun disableIfNoContactsActivityFound(button: Button) {
+        val intent =
+            getContactNameActivityLauncher.contract.createIntent(requireContext(), null)
         val packageManager: PackageManager = requireActivity().packageManager
         val resolvedActivity =
             packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        if (resolvedActivity == null) view.isEnabled = false
+        if (resolvedActivity == null) button.isEnabled = false
     }
 
     private fun updateUI() {
@@ -150,37 +175,6 @@ class CrimeDetailFragment : Fragment() {
         }
         if (crime.suspect.isNotEmpty()) {
             suspectButton.text = crime.suspect
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when {
-            resultCode != Activity.RESULT_OK -> return
-
-            requestCode == REQUEST_CODE_CONTACT && data != null -> {
-                readContactNameFromContactAppDatabase(data)
-            }
-        }
-    }
-
-    private fun readContactNameFromContactAppDatabase(data: Intent) {
-        val contactUri: Uri? = data.data
-        val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
-        val cursor = activity?.contentResolver?.query(
-            contactUri!!,
-            queryFields,
-            null,
-            null,
-            null
-        )
-        cursor?.use {
-            if (it.count == 0) return
-
-            it.moveToFirst()
-            val suspect = it.getString(0)
-            crime.suspect = suspect
-            viewModel.saveCrime(crime)
-            suspectButton.text = suspect
         }
     }
 
