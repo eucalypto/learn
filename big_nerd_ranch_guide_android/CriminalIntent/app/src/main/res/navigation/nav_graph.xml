@@ -18,7 +18,7 @@
         android:id="@+id/crimeDetailFragment"
         android:name="net.eucalypto.criminalintent.crimedetail.CrimeDetailFragment"
         android:label="CrimeDetailFragment"
-        tools:layout="@layout/fragment_crime">
+        tools:layout="@layout/fragment_crime_detail">
         <argument
             android:name="crimeId"
             app:argType="java.util.UUID" />

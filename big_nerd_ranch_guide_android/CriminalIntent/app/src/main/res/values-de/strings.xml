@@ -17,4 +17,7 @@
     <string name="crime_report_suspect">der Verdächtigte ist %s.</string>
     <string name="crime_report_subject">Verbrecherische Absicht Report</string>
     <string name="send_report">Report senden mit</string>
+    <string name="crime_photo_button_description">Foto von der Kriminalszene aufnehmen</string>
+    <string name="crime_photo_no_image_description">Kriminalszene Foto (nicht gesetzt)</string>
+    <string name="crime_photo_image_description">Kriminalszene Foto (gesetzt)</string>
 </resources>

@@ -39,7 +39,7 @@ class CrimeDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_crime, container, false)
+        return inflater.inflate(R.layout.fragment_crime_detail, container, false)
     }
 
     private val viewModel by lazy {
@@ -230,8 +230,10 @@ class CrimeDetailFragment : Fragment() {
         if (photoFile.exists()) {
             val bitmap = getScaledBitmap(photoFile.path, requireActivity())
             photoView.setImageBitmap(bitmap)
+            photoView.contentDescription = getString(R.string.crime_photo_image_description)
         } else {
             photoView.setImageDrawable(null)
+            photoView.contentDescription = getString(R.string.crime_photo_no_image_description)
         }
     }
 
