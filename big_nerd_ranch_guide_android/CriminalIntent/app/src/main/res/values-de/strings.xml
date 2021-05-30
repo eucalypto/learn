@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Verbrecherische Absicht</string>
+    <string name="crime_title_hint">Geben Sie einen Titel für das Verbrechen ein.</string>
+    <string name="crime_title_label">Titel</string>
+    <string name="crime_details_label">Details</string>
+    <string name="crime_solved_label">Gelöst</string>
+    <string name="new_crime">Neues Verbrechen</string>
+    <string name="crime_choose_suspect">Beschuldigten aussuchen</string>
+    <string name="crime_report_button">Verbrechensreport senden</string>
+    <string name="crime_report">%1$s!
+    Das Verbrechen wurde entdeckt am %2$s. %3$s, und %4$s
+    </string>
+    <string name="crime_report_solved">Der Fall ist gelöst</string>
+    <string name="crime_report_unsolved">Der Fall ist nicht gelöst</string>
+    <string name="crime_report_no_suspect">es gibt keinen Verdächtigten.</string>
+    <string name="crime_report_suspect">der Verdächtigte ist %s.</string>
+    <string name="crime_report_subject">Verbrecherische Absicht Report</string>
+    <string name="send_report">Report senden mit</string>
+</resources>
