@@ -1,8 +1,16 @@
 package net.eucalypto.bignerdranch.beatbox
 
-class SoundViewModel {
-    var sound: Sound? = null
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 
+class SoundViewModel : BaseObservable() {
+    var sound: Sound? = null
+        set(sound) {
+            field = sound
+            notifyChange()
+        }
+
+    @get:Bindable
     val title: String?
         get() = sound?.name
 }
