@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="net.eucalypto.bignerdranch.beatbox.SoundViewModel" />
+            type="net.eucalypto.bignerdranch.beatbox.sound.SoundViewModel" />
     </data>
 
     <Button
@@ -14,6 +14,7 @@
         android:layout_height="120dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:onClick="@{() -> viewModel.onButtonClicked()}"
         android:text="@{viewModel.title}"
         tools:text="Sound Name" />
 </layout>

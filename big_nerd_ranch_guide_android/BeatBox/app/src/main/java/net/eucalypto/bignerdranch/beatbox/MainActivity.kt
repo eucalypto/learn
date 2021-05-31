@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.eucalypto.bignerdranch.beatbox.databinding.ActivityMainBinding
 import net.eucalypto.bignerdranch.beatbox.databinding.ListItemSoundBinding
+import net.eucalypto.bignerdranch.beatbox.sound.Sound
+import net.eucalypto.bignerdranch.beatbox.sound.SoundViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +28,11 @@ class MainActivity : AppCompatActivity() {
             layoutManager = GridLayoutManager(context, 3)
             adapter = SoundAdapter(beatBox.sounds)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        beatBox.release()
     }
 
 
@@ -55,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         inner class SoundHolder(private val binding: ListItemSoundBinding) :
             RecyclerView.ViewHolder(binding.root) {
             init {
-                binding.viewModel = SoundViewModel()
+                binding.viewModel = SoundViewModel(beatBox)
             }
 
             fun bind(sound: Sound) {
