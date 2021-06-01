@@ -18,6 +18,12 @@
     </style>
 
     <style name="BeatBoxButton" parent="@style/Widget.MaterialComponents.Button">
-        <item name="android:backgroundTint">@color/dark_blue</item>
+        <item name="shapeAppearanceOverlay">@style/BeatBoxButtonShapeAppearance</item>
+        <item name="backgroundTint">@color/dark_blue</item>
+    </style>
+
+    <style name="BeatBoxButtonShapeAppearance">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40%</item>
     </style>
 </resources>
