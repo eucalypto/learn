@@ -3,11 +3,22 @@
     package="net.eucalypto.bignerdranch.nerdlauncher">
 
     <application
-        android:allowBackup="true"
+        android:name=".NerdLauncherApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NerdLauncher" />
+        android:theme="@style/Theme.NerdLauncher">
+        <activity android:name=".NerdLauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
 
 </manifest>
