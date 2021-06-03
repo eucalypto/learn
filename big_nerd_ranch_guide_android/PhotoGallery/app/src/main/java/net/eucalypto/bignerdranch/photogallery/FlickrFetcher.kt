@@ -3,11 +3,12 @@ package net.eucalypto.bignerdranch.photogallery
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import net.eucalypto.bignerdranch.photogallery.api.FlickrApi
+import net.eucalypto.bignerdranch.photogallery.api.FlickrResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 class FlickrFetcher {
@@ -16,24 +17,29 @@ class FlickrFetcher {
     init {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.flickr.com/")
-            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         flickrApi = retrofit.create(FlickrApi::class.java)
     }
 
-    fun fetchPhotos(): LiveData<String> {
-        val responseLiveData = MutableLiveData<String>()
-        val flickrHomePageRequest = flickrApi.fetchPhotos()
+    fun fetchPhotos(): LiveData<List<GalleryItem>> {
+        val responseLiveData = MutableLiveData<List<GalleryItem>>()
+        val flickrRequest = flickrApi.fetchPhotos()
 
-        flickrHomePageRequest.enqueue(object : Callback<String> {
+        flickrRequest.enqueue(object : Callback<FlickrResponse> {
             override fun onResponse(
-                call: Call<String>, response: Response<String>
+                call: Call<FlickrResponse>, response: Response<FlickrResponse>
             ) {
-                responseLiveData.value = response.body()
+                var galleryItems =
+                    response.body()?.photos?.galleryItems ?: mutableListOf()
+                galleryItems = galleryItems.filterNot {
+                    it.url.isBlank()
+                }
+                responseLiveData.value = galleryItems
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<FlickrResponse>, t: Throwable) {
                 Timber.e(t, "Failed to fetch photos")
             }
         })

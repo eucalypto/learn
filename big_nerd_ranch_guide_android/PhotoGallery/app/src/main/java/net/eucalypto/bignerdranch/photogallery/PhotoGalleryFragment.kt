@@ -16,8 +16,8 @@ class PhotoGalleryFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val flickrLiveData = FlickrFetcher().fetchPhotos()
-        flickrLiveData.observe(this) {
-            Timber.d("Response Received: $it")
+        flickrLiveData.observe(this) { galleryItems ->
+            Timber.d("Response Received: $galleryItems")
         }
     }
 
