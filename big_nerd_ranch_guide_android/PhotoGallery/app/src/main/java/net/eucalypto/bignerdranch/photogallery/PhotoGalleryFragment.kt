@@ -7,8 +7,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import net.eucalypto.bignerdranch.photogallery.databinding.FragmentPhotoGalleryBinding
+import timber.log.Timber
 
 class PhotoGalleryFragment : Fragment() {
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val flickrLiveData = FlickrFetcher().fetchPhotos()
+        flickrLiveData.observe(this) {
+            Timber.d("Response Received: $it")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
