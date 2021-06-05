@@ -1,8 +1,10 @@
 package net.eucalypto.bignerdranch.photogallery.api
 
 import net.eucalypto.bignerdranch.photogallery.BuildConfig
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Url
 
 private const val FLICKR_API_KEY = BuildConfig.FLICKR_API_KEY
 
@@ -16,5 +18,8 @@ interface FlickrApi {
                 "&extras=url_s"
     )
     fun fetchPhotos(): Call<FlickrResponse>
+
+    @GET
+    fun fetchUrlBytes(@Url url: String): Call<ResponseBody>
 
 }

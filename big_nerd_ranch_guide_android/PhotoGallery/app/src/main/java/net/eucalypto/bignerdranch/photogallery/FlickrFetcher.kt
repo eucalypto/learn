@@ -1,5 +1,8 @@
 package net.eucalypto.bignerdranch.photogallery
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import net.eucalypto.bignerdranch.photogallery.api.FlickrApi
@@ -21,6 +24,17 @@ class FlickrFetcher {
             .build()
 
         flickrApi = retrofit.create(FlickrApi::class.java)
+    }
+
+
+    @WorkerThread
+    fun fetchPhoto(url: String): Bitmap? {
+        val response = flickrApi.fetchUrlBytes(url).execute()
+        val bitmap = response.body()?.byteStream()?.use {
+            BitmapFactory.decodeStream(it)
+        }
+        Timber.d("Decoded bitmap=$bitmap from Response=$response")
+        return bitmap
     }
 
     fun fetchPhotos(): LiveData<List<GalleryItem>> {
