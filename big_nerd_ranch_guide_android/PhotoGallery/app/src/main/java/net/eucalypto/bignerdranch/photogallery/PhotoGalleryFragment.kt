@@ -5,9 +5,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,7 +23,14 @@ class PhotoGalleryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setHasOptionsMenu(true)
+
         retainInstance = true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_photo_gallery, menu)
     }
 
     override fun onCreateView(
@@ -82,7 +87,7 @@ class PhotoGalleryFragment : Fragment() {
             parent: ViewGroup,
             viewType: Int
         ): PhotoHolder {
-            return PhotoHolder.create(parent)
+            return PhotoHolder.from(parent)
         }
 
         override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
@@ -95,7 +100,7 @@ class PhotoGalleryFragment : Fragment() {
             return galleryItems.size
         }
 
-        class PhotoHolder(viewBinding: ListItemGalleryBinding) :
+        class PhotoHolder private constructor(viewBinding: ListItemGalleryBinding) :
             RecyclerView.ViewHolder(viewBinding.root) {
 
             private val itemImageView = viewBinding.photoGalleryItem
@@ -105,7 +110,7 @@ class PhotoGalleryFragment : Fragment() {
             }
 
             companion object {
-                fun create(parent: ViewGroup): PhotoHolder {
+                fun from(parent: ViewGroup): PhotoHolder {
                     val layoutInflater = LayoutInflater.from(parent.context)
                     val imageItemBinding =
                         ListItemGalleryBinding.inflate(layoutInflater)

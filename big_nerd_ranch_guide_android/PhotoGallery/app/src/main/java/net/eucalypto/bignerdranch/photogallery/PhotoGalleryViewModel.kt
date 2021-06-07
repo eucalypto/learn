@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 
 class PhotoGalleryViewModel : ViewModel() {
 
-    val galleryItemLiveData: LiveData<List<GalleryItem>>
+    val galleryItemLiveData: LiveData<List<GalleryItem>> =
+        FlickrFetcher().searchPhotos("llama")
 
-    init {
-        galleryItemLiveData = FlickrFetcher().fetchPhotos()
-    }
 }

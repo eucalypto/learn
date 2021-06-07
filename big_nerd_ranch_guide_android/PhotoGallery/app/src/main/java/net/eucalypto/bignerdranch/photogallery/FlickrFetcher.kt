@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import net.eucalypto.bignerdranch.photogallery.api.FlickrApi
 import net.eucalypto.bignerdranch.photogallery.api.FlickrResponse
+import net.eucalypto.bignerdranch.photogallery.api.PhotoInterceptor
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,9 +20,15 @@ class FlickrFetcher {
     private val flickrApi: FlickrApi
 
     init {
+        val client =
+            OkHttpClient.Builder()
+                .addInterceptor(PhotoInterceptor())
+                .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.flickr.com/")
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
 
         flickrApi = retrofit.create(FlickrApi::class.java)
@@ -38,8 +46,16 @@ class FlickrFetcher {
     }
 
     fun fetchPhotos(): LiveData<List<GalleryItem>> {
+        return fetchPhotoMetadata(flickrApi.fetchPhotos())
+    }
+
+    fun searchPhotos(query: String): LiveData<List<GalleryItem>> {
+        return fetchPhotoMetadata(flickrApi.searchPhotos(query))
+    }
+
+    private fun fetchPhotoMetadata(flickrRequest: Call<FlickrResponse>)
+            : LiveData<List<GalleryItem>> {
         val responseLiveData = MutableLiveData<List<GalleryItem>>()
-        val flickrRequest = flickrApi.fetchPhotos()
 
         flickrRequest.enqueue(object : Callback<FlickrResponse> {
             override fun onResponse(
