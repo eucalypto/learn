@@ -38,6 +38,7 @@ class PhotoGalleryFragment : Fragment() {
         val searchView = searchItem.actionView as SearchView
 
         searchView.apply {
+
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     Timber.d("QueryTextSubmit: $query")
@@ -51,6 +52,10 @@ class PhotoGalleryFragment : Fragment() {
                 }
 
             })
+
+            setOnSearchClickListener {
+                setQuery(viewModel.searchTerm, false)
+            }
         }
 
     }

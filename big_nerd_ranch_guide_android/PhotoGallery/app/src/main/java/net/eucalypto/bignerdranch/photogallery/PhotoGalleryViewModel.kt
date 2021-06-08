@@ -12,6 +12,9 @@ class PhotoGalleryViewModel(private val app: Application) :
     private val flickrFetcher = FlickrFetcher()
     private val mutableSearchTerm = MutableLiveData<String>()
 
+    val searchTerm: String
+        get() = mutableSearchTerm.value ?: ""
+
     init {
         mutableSearchTerm.value = QueryPreferences.getStoredQuery(app)
     }
