@@ -1,21 +1,33 @@
 package net.eucalypto.bignerdranch.photogallery
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
 
-class PhotoGalleryViewModel : ViewModel() {
+class PhotoGalleryViewModel(private val app: Application) :
+    AndroidViewModel(app) {
 
     private val flickrFetcher = FlickrFetcher()
-    private val mutableSearchTerm = MutableLiveData<String>("dog")
+    private val mutableSearchTerm = MutableLiveData<String>()
+
+    init {
+        mutableSearchTerm.value = QueryPreferences.getStoredQuery(app)
+    }
+
 
     val galleryItemLiveData: LiveData<List<GalleryItem>> =
         Transformations.switchMap(mutableSearchTerm) { searchTerm ->
-            flickrFetcher.searchPhotos(searchTerm)
+            if (searchTerm.isBlank()) {
+                flickrFetcher.fetchInterestingPhotos()
+            } else {
+                flickrFetcher.searchPhotos(searchTerm)
+            }
         }
 
     fun fetchPhotos(query: String = "") {
+        QueryPreferences.setStoredQuery(app, query)
         mutableSearchTerm.value = query
     }
 

@@ -45,8 +45,8 @@ class FlickrFetcher {
         return bitmap
     }
 
-    fun fetchPhotos(): LiveData<List<GalleryItem>> {
-        return fetchPhotoMetadata(flickrApi.fetchPhotos())
+    fun fetchInterestingPhotos(): LiveData<List<GalleryItem>> {
+        return fetchPhotoMetadata(flickrApi.fetchInterestingPhotos())
     }
 
     fun searchPhotos(query: String): LiveData<List<GalleryItem>> {
