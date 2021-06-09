@@ -66,7 +66,6 @@ class ThumbnailDownloader<in T>(
             override fun handleMessage(msg: Message) {
                 if (msg.what == MESSAGE_DOWNLOAD) {
                     val target = msg.obj as T
-                    Timber.i("Got a request for URL: ${requestMap[target]}")
                     handleRequest(target)
                 }
             }
