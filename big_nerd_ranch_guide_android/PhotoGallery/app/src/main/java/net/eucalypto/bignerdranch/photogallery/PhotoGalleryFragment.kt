@@ -11,6 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import net.eucalypto.bignerdranch.photogallery.databinding.FragmentPhotoGalleryBinding
 import net.eucalypto.bignerdranch.photogallery.databinding.ListItemGalleryBinding
 import timber.log.Timber
@@ -28,6 +32,19 @@ class PhotoGalleryFragment : Fragment() {
         setHasOptionsMenu(true)
 
         retainInstance = true
+
+        setUpWorkRequest()
+    }
+
+    private fun setUpWorkRequest() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+        val workRequest = OneTimeWorkRequest
+            .Builder(PollWorker::class.java)
+            .setConstraints(constraints)
+            .build()
+        WorkManager.getInstance().enqueue(workRequest)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
