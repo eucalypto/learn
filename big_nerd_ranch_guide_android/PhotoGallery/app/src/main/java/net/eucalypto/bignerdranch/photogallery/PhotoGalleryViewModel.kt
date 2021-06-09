@@ -25,7 +25,7 @@ class PhotoGalleryViewModel(private val app: Application) :
             if (searchTerm.isBlank()) {
                 flickrFetcher.fetchInterestingPhotos()
             } else {
-                flickrFetcher.searchPhotos(searchTerm)
+                flickrFetcher.fetchSearchPhotos(searchTerm)
             }
         }
 
