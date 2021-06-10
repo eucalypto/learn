@@ -7,13 +7,14 @@ import android.os.Handler
 import android.os.Looper
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import net.eucalypto.bignerdranch.photogallery.R
+import net.eucalypto.bignerdranch.photogallery.backgroundpoll.DynamicShowNotificationReceiver
 import net.eucalypto.bignerdranch.photogallery.backgroundpoll.PollWorker
-import net.eucalypto.bignerdranch.photogallery.backgroundpoll.VisibleFragment
 import net.eucalypto.bignerdranch.photogallery.databinding.FragmentPhotoGalleryBinding
 import net.eucalypto.bignerdranch.photogallery.databinding.ListItemGalleryBinding
 import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit
 
 private const val POLL_WORK = "POLL_WORK"
 
-class PhotoGalleryFragment : VisibleFragment() {
+class PhotoGalleryFragment : Fragment() {
 
     private val viewModel: PhotoGalleryViewModel by viewModels()
 
@@ -35,6 +36,7 @@ class PhotoGalleryFragment : VisibleFragment() {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
+        DynamicShowNotificationReceiver.setUpWith(this)
 
         retainInstance = true
     }
