@@ -2,6 +2,7 @@ package net.eucalypto.bignerdranch.photogallery
 
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
@@ -22,13 +23,18 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
         } else {
             Timber.i("Got a new result: $resultId")
             QueryPreferences.setLastResultId(context, resultId)
-            postPushNotification()
+            showPushNotification()
+
+            context.sendBroadcast(
+                Intent(ACTION_SHOW_NOTIFICATION),
+                PERMISSION_PRIVATE
+            )
         }
 
         return Result.success()
     }
 
-    private fun postPushNotification() {
+    private fun showPushNotification() {
         val intent = PhotoGalleryActivity.newIntent(context)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
@@ -43,8 +49,8 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
             .setAutoCancel(true)
             .build()
 
-        val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(0, notification)
+        NotificationManagerCompat.from(context)
+            .notify(0, notification)
     }
 
     private fun getNewestItems(): List<GalleryItem> {
@@ -56,5 +62,14 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
             FlickrFetcher().fetchSearchPhotosRequest(query)
                 .execute().body()?.photos?.galleryItems
         } ?: emptyList()
+    }
+
+    companion object {
+        const val ACTION_SHOW_NOTIFICATION =
+            "net.eucalypto.bignerdranch.photogallery.SHOW_NOTIFICATION"
+
+        // This MUST be the very same string used also twice in AndroidManifest.xml
+        const val PERMISSION_PRIVATE =
+            "net.eucalypto.bignerdranch.photogallery.PRIVATE"
     }
 }
