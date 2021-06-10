@@ -7,6 +7,6 @@ import timber.log.Timber
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.i("received broadcast: ${intent.action}")
+        Timber.d("received broadcast: ${intent.action}")
     }
 }

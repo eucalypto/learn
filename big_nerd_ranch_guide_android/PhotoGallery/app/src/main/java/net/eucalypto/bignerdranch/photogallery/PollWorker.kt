@@ -16,12 +16,18 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
 
         if (newestItems.isEmpty()) return Result.success()
 
+        // TODO: Remove after testing is done
+        context.sendBroadcast(
+            Intent(ACTION_SHOW_NOTIFICATION),
+            PERMISSION_PRIVATE
+        )
+
         val lastResultId = QueryPreferences.getLastResultId(context)
         val resultId = newestItems.first().id
         if (resultId == lastResultId) {
-            Timber.i("Got an old result: $resultId")
+            Timber.d("Got an old result: $resultId")
         } else {
-            Timber.i("Got a new result: $resultId")
+            Timber.d("Got a new result: $resultId")
             QueryPreferences.setLastResultId(context, resultId)
             showPushNotification()
 

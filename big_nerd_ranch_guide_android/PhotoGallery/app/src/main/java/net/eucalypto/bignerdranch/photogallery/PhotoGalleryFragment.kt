@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,7 @@ import java.util.concurrent.TimeUnit
 
 private const val POLL_WORK = "POLL_WORK"
 
-class PhotoGalleryFragment : Fragment() {
+class PhotoGalleryFragment : VisibleFragment() {
 
     private val viewModel: PhotoGalleryViewModel by viewModels()
 
@@ -102,7 +101,7 @@ class PhotoGalleryFragment : Fragment() {
     private fun stopPeriodicPolling() {
         WorkManager.getInstance(requireContext())
             .cancelUniqueWork(POLL_WORK)
-        Timber.i("Stop Periodic Polling Worker")
+        Timber.d("Stop Periodic Polling Worker")
     }
 
     private fun startPeriodicPolling() {
@@ -118,7 +117,7 @@ class PhotoGalleryFragment : Fragment() {
             ExistingPeriodicWorkPolicy.KEEP,
             periodicRequest
         )
-        Timber.i("Start periodic polling worker")
+        Timber.d("Start periodic polling worker")
     }
 
     override fun onCreateView(
