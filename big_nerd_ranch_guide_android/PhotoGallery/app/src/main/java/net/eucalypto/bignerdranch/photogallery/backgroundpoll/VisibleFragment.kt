@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.backgroundpoll
 
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.fragment.app.Fragment
+import net.eucalypto.bignerdranch.photogallery.backgroundpoll.PollWorker
 import timber.log.Timber
 
 abstract class VisibleFragment : Fragment() {

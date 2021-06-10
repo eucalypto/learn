@@ -1,13 +1,14 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import net.eucalypto.bignerdranch.photogallery.api.FlickrApi
-import net.eucalypto.bignerdranch.photogallery.api.FlickrResponse
-import net.eucalypto.bignerdranch.photogallery.api.PhotoInterceptor
+import net.eucalypto.bignerdranch.photogallery.repository.api.FlickrApi
+import net.eucalypto.bignerdranch.photogallery.repository.api.FlickrResponse
+import net.eucalypto.bignerdranch.photogallery.repository.api.PhotoInterceptor
+import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback

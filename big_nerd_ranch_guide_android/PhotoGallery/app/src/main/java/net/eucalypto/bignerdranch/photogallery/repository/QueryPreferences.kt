@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.repository
 
 import android.content.Context
 import androidx.core.content.edit

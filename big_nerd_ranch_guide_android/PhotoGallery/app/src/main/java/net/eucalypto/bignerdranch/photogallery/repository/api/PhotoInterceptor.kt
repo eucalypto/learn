@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery.api
+package net.eucalypto.bignerdranch.photogallery.repository.api
 
 import net.eucalypto.bignerdranch.photogallery.BuildConfig
 import okhttp3.Interceptor

@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery.api
+package net.eucalypto.bignerdranch.photogallery.repository.api
 
 import okhttp3.ResponseBody
 import retrofit2.Call

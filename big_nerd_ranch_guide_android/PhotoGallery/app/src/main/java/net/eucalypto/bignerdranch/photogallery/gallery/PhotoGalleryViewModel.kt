@@ -1,10 +1,13 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.gallery
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
+import net.eucalypto.bignerdranch.photogallery.repository.FlickrFetcher
+import net.eucalypto.bignerdranch.photogallery.repository.QueryPreferences
 
 class PhotoGalleryViewModel(private val app: Application) :
     AndroidViewModel(app) {

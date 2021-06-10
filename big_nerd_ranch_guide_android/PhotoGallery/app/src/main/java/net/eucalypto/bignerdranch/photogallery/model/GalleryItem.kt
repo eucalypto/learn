@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.model
 
 import com.google.gson.annotations.SerializedName
 

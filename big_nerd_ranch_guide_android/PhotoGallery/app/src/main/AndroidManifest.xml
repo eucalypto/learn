@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".NotificationReceiver"
+            android:name=".backgroundpoll.NotificationReceiver"
             android:exported="false"
             android:permission="net.eucalypto.bignerdranch.photogallery.PRIVATE">
             <intent-filter android:priority="-999">

@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.repository
 
 import android.graphics.Bitmap
 import android.os.Handler

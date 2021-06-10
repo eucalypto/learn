@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.backgroundpoll
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -7,6 +7,10 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import net.eucalypto.bignerdranch.photogallery.*
+import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
+import net.eucalypto.bignerdranch.photogallery.repository.FlickrFetcher
+import net.eucalypto.bignerdranch.photogallery.repository.QueryPreferences
 import timber.log.Timber
 
 class PollWorker(private val context: Context, workerParams: WorkerParameters) :

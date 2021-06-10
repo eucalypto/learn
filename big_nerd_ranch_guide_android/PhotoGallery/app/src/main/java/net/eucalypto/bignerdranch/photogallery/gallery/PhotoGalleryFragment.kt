@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery
+package net.eucalypto.bignerdranch.photogallery.gallery
 
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -11,8 +11,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
+import net.eucalypto.bignerdranch.photogallery.R
+import net.eucalypto.bignerdranch.photogallery.backgroundpoll.PollWorker
+import net.eucalypto.bignerdranch.photogallery.backgroundpoll.VisibleFragment
 import net.eucalypto.bignerdranch.photogallery.databinding.FragmentPhotoGalleryBinding
 import net.eucalypto.bignerdranch.photogallery.databinding.ListItemGalleryBinding
+import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
+import net.eucalypto.bignerdranch.photogallery.repository.QueryPreferences
+import net.eucalypto.bignerdranch.photogallery.repository.ThumbnailDownloader
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
