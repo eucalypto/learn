@@ -1,10 +1,10 @@
 package net.eucalypto.bignerdranch.photogallery
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import timber.log.Timber
@@ -16,12 +16,6 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
 
         if (newestItems.isEmpty()) return Result.success()
 
-        // TODO: Remove after testing is done
-        context.sendBroadcast(
-            Intent(ACTION_SHOW_NOTIFICATION),
-            PERMISSION_PRIVATE
-        )
-
         val lastResultId = QueryPreferences.getLastResultId(context)
         val resultId = newestItems.first().id
         if (resultId == lastResultId) {
@@ -29,23 +23,33 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
         } else {
             Timber.d("Got a new result: $resultId")
             QueryPreferences.setLastResultId(context, resultId)
-            showPushNotification()
+            val notification = buildPushNotification()
 
-            context.sendBroadcast(
-                Intent(ACTION_SHOW_NOTIFICATION),
-                PERMISSION_PRIVATE
-            )
+            showBackgroundNotification(0, notification)
         }
 
         return Result.success()
     }
 
-    private fun showPushNotification() {
+    private fun showBackgroundNotification(
+        requestCode: Int,
+        notification: Notification
+    ) {
+        val intent = Intent(ACTION_SHOW_NOTIFICATION).apply {
+            putExtra(REQUEST_CODE, requestCode)
+            putExtra(NOTIFICATION, notification)
+        }
+
+        context.sendOrderedBroadcast(intent, PERMISSION_PRIVATE)
+    }
+
+    private fun buildPushNotification(): Notification {
         val intent = PhotoGalleryActivity.newIntent(context)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val resources = context.resources
-        val notification = NotificationCompat
+
+        return NotificationCompat
             .Builder(context, NOTIFICATION_CHANNEL_ID)
             .setTicker(resources.getString(R.string.new_pictures_title))
             .setSmallIcon(android.R.drawable.ic_menu_report_image)
@@ -54,9 +58,6 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
-
-        NotificationManagerCompat.from(context)
-            .notify(0, notification)
     }
 
     private fun getNewestItems(): List<GalleryItem> {
@@ -77,5 +78,8 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
         // This MUST be the very same string used also twice in AndroidManifest.xml
         const val PERMISSION_PRIVATE =
             "net.eucalypto.bignerdranch.photogallery.PRIVATE"
+
+        const val REQUEST_CODE = "REQUEST_CODE"
+        const val NOTIFICATION = "NOTIFICATION"
     }
 }

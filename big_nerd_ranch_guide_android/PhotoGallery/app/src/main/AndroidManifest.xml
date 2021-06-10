@@ -28,7 +28,7 @@
             android:name=".NotificationReceiver"
             android:exported="false"
             android:permission="net.eucalypto.bignerdranch.photogallery.PRIVATE">
-            <intent-filter>
+            <intent-filter android:priority="-999">
                 <action android:name="net.eucalypto.bignerdranch.photogallery.SHOW_NOTIFICATION" />
             </intent-filter>
         </receiver>

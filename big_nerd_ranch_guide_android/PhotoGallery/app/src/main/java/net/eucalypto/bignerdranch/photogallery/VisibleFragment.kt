@@ -1,10 +1,10 @@
 package net.eucalypto.bignerdranch.photogallery
 
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import timber.log.Timber
 
@@ -12,13 +12,8 @@ abstract class VisibleFragment : Fragment() {
 
     private val onShowNotification = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Toast.makeText(
-                requireContext(),
-                "Got a broadcast: ${intent.action}",
-                Toast.LENGTH_LONG
-            ).show()
-
-            Timber.d("Got a broadcast: ${intent.action}")
+            Timber.d("Got a broadcast: ${intent.action}. Cancelling further notifications")
+            resultCode = Activity.RESULT_CANCELED
         }
     }
 
