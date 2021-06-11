@@ -10,12 +10,12 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import timber.log.Timber
 
-class DynamicShowNotificationReceiver private constructor(private val fragment: Fragment) :
+class DynamicShowNotificationInterceptReceiver private constructor(private val fragment: Fragment) :
     DefaultLifecycleObserver {
 
     companion object {
         fun setUpWith(fragment: Fragment) {
-            DynamicShowNotificationReceiver(fragment)
+            DynamicShowNotificationInterceptReceiver(fragment)
         }
     }
 
@@ -32,7 +32,7 @@ class DynamicShowNotificationReceiver private constructor(private val fragment: 
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        val filter = IntentFilter(PollWorker.ACTION_SHOW_NOTIFICATION)
+        val filter = IntentFilter(NotificationReceiver.ACTION_SHOW_NOTIFICATION)
         fragment.requireActivity().registerReceiver(
             disableNotification,
             filter,

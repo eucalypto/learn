@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import net.eucalypto.bignerdranch.photogallery.R
-import net.eucalypto.bignerdranch.photogallery.backgroundpoll.DynamicShowNotificationReceiver
+import net.eucalypto.bignerdranch.photogallery.backgroundpoll.DynamicShowNotificationInterceptReceiver
 import net.eucalypto.bignerdranch.photogallery.backgroundpoll.PollWorker
 import net.eucalypto.bignerdranch.photogallery.databinding.FragmentPhotoGalleryBinding
 import net.eucalypto.bignerdranch.photogallery.databinding.ListItemGalleryBinding
@@ -34,10 +34,8 @@ class PhotoGalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setHasOptionsMenu(true)
-        DynamicShowNotificationReceiver.setUpWith(this)
-
+        DynamicShowNotificationInterceptReceiver.setUpWith(this)
         retainInstance = true
     }
 

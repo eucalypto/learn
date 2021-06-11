@@ -3,7 +3,6 @@ package net.eucalypto.bignerdranch.photogallery.backgroundpoll
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -18,36 +17,32 @@ import timber.log.Timber
 class PollWorker(private val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
     override fun doWork(): Result {
-        val newestItems = getNewestItems()
+        val newestItems = fetchNewestItems()
 
         if (newestItems.isEmpty()) return Result.success()
 
-        val lastResultId = QueryPreferences.getLastResultId(context)
+        val storedResultId = QueryPreferences.getLastResultId(context)
         val fetchedResultId = newestItems.first().id
-        if (fetchedResultId == lastResultId) {
+        if (fetchedResultId == storedResultId) {
             Timber.d("Got an old result: $fetchedResultId")
         } else {
             Timber.d("Got a new result: $fetchedResultId")
             QueryPreferences.setLastResultId(context, fetchedResultId)
-
-            val notification = newPicturesPushNotification()
-            sendShowNotificationBroadcast(notification)
+            sendShowNotificationBroadcast()
         }
 
         return Result.success()
     }
 
-    private fun sendShowNotificationBroadcast(notification: Notification) {
+    private fun sendShowNotificationBroadcast() {
+        val notification = createNewPicturesPushNotification()
         val requestCode = 0
-        val intent = Intent(ACTION_SHOW_NOTIFICATION).apply {
-            putExtra(NotificationReceiver.PUT_EXTRA_REQUEST_CODE, requestCode)
-            putExtra(NotificationReceiver.PUT_EXTRA_NOTIFICATION, notification)
-        }
-
+        val intent =
+            NotificationReceiver.createIntent(requestCode, notification)
         context.sendOrderedBroadcast(intent, PERMISSION_PRIVATE)
     }
 
-    private fun newPicturesPushNotification(): Notification {
+    private fun createNewPicturesPushNotification(): Notification {
         val photoGalleryIntent = PhotoGalleryActivity.newIntent(context)
         val pendingPhotoGalleryIntent =
             PendingIntent.getActivity(context, 0, photoGalleryIntent, 0)
@@ -63,7 +58,7 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
             .build()
     }
 
-    private fun getNewestItems(): List<GalleryItem> {
+    private fun fetchNewestItems(): List<GalleryItem> {
         val query = QueryPreferences.getStoredQuery(context)
         return if (query.isEmpty()) {
             FlickrFetcher().fetchInterestingPhotosRequest()
@@ -75,9 +70,6 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
     }
 
     companion object {
-        const val ACTION_SHOW_NOTIFICATION =
-            "net.eucalypto.bignerdranch.photogallery.SHOW_NOTIFICATION"
-
         // This MUST be the very same string used also twice in AndroidManifest.xml
         const val PERMISSION_PRIVATE =
             "net.eucalypto.bignerdranch.photogallery.PRIVATE"

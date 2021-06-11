@@ -29,5 +29,14 @@ class NotificationReceiver : BroadcastReceiver() {
     companion object {
         const val PUT_EXTRA_REQUEST_CODE = "put_extra_request_code"
         const val PUT_EXTRA_NOTIFICATION = "put_extra_notification"
+        const val ACTION_SHOW_NOTIFICATION =
+            "net.eucalypto.bignerdranch.photogallery.SHOW_NOTIFICATION"
+
+        fun createIntent(requestCode: Int, notification: Notification): Intent {
+            return Intent(ACTION_SHOW_NOTIFICATION).apply {
+                putExtra(PUT_EXTRA_REQUEST_CODE, requestCode)
+                putExtra(PUT_EXTRA_NOTIFICATION, notification)
+            }
+        }
     }
 }
