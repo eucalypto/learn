@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.eucalypto.bignerdranch.photogallery.databinding.FragmentPhotoPageBinding
 
@@ -14,12 +17,13 @@ private const val ARG_URI = "photo_page_url"
 
 class PhotoPageFragment : Fragment() {
 
+    private lateinit var binding: FragmentPhotoPageBinding
     private lateinit var uri: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        uri = arguments?.getParcelable<Uri>(ARG_URI) ?: Uri.EMPTY
+        uri = arguments?.getParcelable(ARG_URI) ?: Uri.EMPTY
     }
 
     override fun onCreateView(
@@ -27,7 +31,7 @@ class PhotoPageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding =
+        binding =
             FragmentPhotoPageBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,17 +39,41 @@ class PhotoPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding = FragmentPhotoPageBinding.bind(view)
-
-        setUpWebView(binding)
+        setUpWebView()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setUpWebView(binding: FragmentPhotoPageBinding) {
+    private fun setUpWebView() {
         binding.webView.apply {
             settings.javaScriptEnabled = true
             webViewClient = WebViewClient()
+            webChromeClient = createWebChromeClient()
+
             loadUrl(uri.toString())
+        }
+    }
+
+    private fun createWebChromeClient(): WebChromeClient {
+        val progressBar = binding.progressBar
+        progressBar.max = 100
+
+        return object : WebChromeClient() {
+            override fun onProgressChanged(
+                view: WebView?,
+                newProgress: Int
+            ) {
+                if (newProgress == 100) {
+                    progressBar.visibility = View.GONE
+                } else {
+                    progressBar.visibility = View.VISIBLE
+                    progressBar.progress = newProgress
+                }
+            }
+
+            override fun onReceivedTitle(view: WebView?, title: String?) {
+                (activity as AppCompatActivity)
+                    .supportActionBar?.subtitle = title
+            }
         }
     }
 
