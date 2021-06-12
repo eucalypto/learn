@@ -39,11 +39,11 @@ class PhotoPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpWebView()
+        setUpWebViewAndStartLoadingPage()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setUpWebView() {
+    private fun setUpWebViewAndStartLoadingPage() {
         binding.webView.apply {
             settings.javaScriptEnabled = true
             webViewClient = WebViewClient()
@@ -71,9 +71,18 @@ class PhotoPageFragment : Fragment() {
             }
 
             override fun onReceivedTitle(view: WebView?, title: String?) {
-                (activity as AppCompatActivity)
-                    .supportActionBar?.subtitle = title
+                (activity as AppCompatActivity?)
+                    ?.supportActionBar?.subtitle = title
             }
+        }
+    }
+
+    fun successfullyNavigatedBack(): Boolean {
+        if (binding.webView.canGoBack()) {
+            binding.webView.goBack()
+            return true
+        } else {
+            return false
         }
     }
 

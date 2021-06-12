@@ -9,6 +9,8 @@ import net.eucalypto.bignerdranch.photogallery.R
 
 class PhotoPageActivity : AppCompatActivity() {
 
+    lateinit var fragment: PhotoPageFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_page)
@@ -19,9 +21,18 @@ class PhotoPageActivity : AppCompatActivity() {
 
         if (currentFragment == null) {
             val fragment = PhotoPageFragment.newInstance(intent.data!!)
+            this.fragment = fragment
             fm.beginTransaction()
                 .add(R.id.fragment_container_photo_page, fragment)
                 .commit()
+        } else {
+            fragment = currentFragment as PhotoPageFragment
+        }
+    }
+
+    override fun onBackPressed() {
+        if (!fragment.successfullyNavigatedBack()) {
+            super.onBackPressed()
         }
     }
 
