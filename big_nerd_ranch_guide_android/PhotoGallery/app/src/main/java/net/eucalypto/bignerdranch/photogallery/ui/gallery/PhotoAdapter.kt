@@ -1,6 +1,5 @@
 package net.eucalypto.bignerdranch.photogallery.ui.gallery
 
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import net.eucalypto.bignerdranch.photogallery.databinding.ListItemGalleryBinding
 import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
 import net.eucalypto.bignerdranch.photogallery.repository.ThumbnailDownloader
+import net.eucalypto.bignerdranch.photogallery.ui.photopage.PhotoPageActivity
 
 class PhotoAdapter(
     private val galleryItems: List<GalleryItem>,
@@ -52,7 +52,7 @@ class PhotoHolder private constructor(
 
     private fun onClick() {
         val intent =
-            Intent(Intent.ACTION_VIEW, galleryItem.photoPageUri)
+            PhotoPageActivity.newIntent(context, galleryItem.photoPageUri)
         context.startActivity(intent)
     }
 
