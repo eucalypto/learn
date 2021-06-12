@@ -1,7 +1,6 @@
 package net.eucalypto.bignerdranch.photogallery.gallery
 
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,14 +9,11 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import net.eucalypto.bignerdranch.photogallery.R
 import net.eucalypto.bignerdranch.photogallery.backgroundpoll.DynamicShowNotificationInterceptReceiver
 import net.eucalypto.bignerdranch.photogallery.backgroundpoll.PollWorker
 import net.eucalypto.bignerdranch.photogallery.databinding.FragmentPhotoGalleryBinding
-import net.eucalypto.bignerdranch.photogallery.databinding.ListItemGalleryBinding
-import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
 import net.eucalypto.bignerdranch.photogallery.repository.QueryPreferences
 import net.eucalypto.bignerdranch.photogallery.repository.ThumbnailDownloader
 import timber.log.Timber
@@ -29,7 +25,7 @@ class PhotoGalleryFragment : Fragment() {
 
     private val viewModel: PhotoGalleryViewModel by viewModels()
 
-    private lateinit var thumbnailDownloader: ThumbnailDownloader<PhotoAdapter.PhotoHolder>
+    private lateinit var thumbnailDownloader: ThumbnailDownloader<PhotoHolder>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,49 +164,4 @@ class PhotoGalleryFragment : Fragment() {
         super.onDestroy()
         lifecycle.removeObserver(thumbnailDownloader.fragmentLifecycleObserver)
     }
-
-    private class PhotoAdapter(
-        private val galleryItems: List<GalleryItem>,
-        private val thumbnailDownloader: ThumbnailDownloader<PhotoHolder>
-    ) :
-        RecyclerView.Adapter<PhotoAdapter.PhotoHolder>() {
-
-
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
-        ): PhotoHolder {
-            return PhotoHolder.from(parent)
-        }
-
-        override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
-            val galleryItem = galleryItems[position]
-
-            thumbnailDownloader.queueThumbnail(holder, galleryItem.url)
-        }
-
-        override fun getItemCount(): Int {
-            return galleryItems.size
-        }
-
-        class PhotoHolder private constructor(viewBinding: ListItemGalleryBinding) :
-            RecyclerView.ViewHolder(viewBinding.root) {
-
-            private val itemImageView = viewBinding.photoGalleryItem
-
-            fun bindDrawable(drawable: Drawable) {
-                itemImageView.setImageDrawable(drawable)
-            }
-
-            companion object {
-                fun from(parent: ViewGroup): PhotoHolder {
-                    val layoutInflater = LayoutInflater.from(parent.context)
-                    val imageItemBinding =
-                        ListItemGalleryBinding.inflate(layoutInflater)
-                    return PhotoHolder(imageItemBinding)
-                }
-            }
-        }
-    }
-
 }

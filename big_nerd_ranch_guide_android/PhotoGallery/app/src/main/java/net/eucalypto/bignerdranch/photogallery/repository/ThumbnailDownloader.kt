@@ -4,9 +4,7 @@ import android.graphics.Bitmap
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Message
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 
@@ -24,24 +22,26 @@ class ThumbnailDownloader<in T>(
     private val flickrFetcher = FlickrFetcher()
 
 
-    val fragmentLifecycleObserver = object : LifecycleObserver {
-        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        fun setup() {
+    val fragmentLifecycleObserver = object : DefaultLifecycleObserver {
+
+        override fun onCreate(owner: LifecycleOwner) {
+            super.onCreate(owner)
             Timber.i("Starting background thread")
             start()
             looper
         }
 
-        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        fun tearDown() {
+        override fun onDestroy(owner: LifecycleOwner) {
+            super.onDestroy(owner)
             Timber.i("Destroying background thread")
             quit()
         }
     }
 
-    val viewLifecycleObserver = object : LifecycleObserver {
-        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        fun clearQueue() {
+    val viewLifecycleObserver = object : DefaultLifecycleObserver {
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            super.onDestroy(owner)
             Timber.i("Clearing all requests from queue")
             requestHandler.removeMessages(MESSAGE_DOWNLOAD)
             requestMap.clear()
