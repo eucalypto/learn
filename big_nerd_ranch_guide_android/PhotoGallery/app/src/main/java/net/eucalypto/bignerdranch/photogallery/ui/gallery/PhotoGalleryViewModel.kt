@@ -1,4 +1,4 @@
-package net.eucalypto.bignerdranch.photogallery.gallery
+package net.eucalypto.bignerdranch.photogallery.ui.gallery
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

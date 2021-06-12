@@ -5,6 +5,6 @@
     app:startDestination="@id/photoGalleryFragment">
     <fragment
         android:id="@+id/photoGalleryFragment"
-        android:name="net.eucalypto.bignerdranch.photogallery.gallery.PhotoGalleryFragment"
+        android:name="net.eucalypto.bignerdranch.photogallery.ui.gallery.PhotoGalleryFragment"
         android:label="PhotoGalleryFragment" />
 </navigation>

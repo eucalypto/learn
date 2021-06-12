@@ -7,7 +7,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import net.eucalypto.bignerdranch.photogallery.NOTIFICATION_CHANNEL_ID
-import net.eucalypto.bignerdranch.photogallery.PhotoGalleryActivity
+import net.eucalypto.bignerdranch.photogallery.ui.gallery.PhotoGalleryActivity
 import net.eucalypto.bignerdranch.photogallery.R
 import net.eucalypto.bignerdranch.photogallery.model.GalleryItem
 import net.eucalypto.bignerdranch.photogallery.repository.FlickrFetcher
