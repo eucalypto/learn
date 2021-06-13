@@ -1,5 +1,6 @@
 package net.eucalypto.bignerdranch.sunset
 
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
@@ -56,8 +57,19 @@ class MainActivity : AppCompatActivity() {
                 setEvaluator(ArgbEvaluatorCompat())
             }
 
+        val nightSkyAnimator = ObjectAnimator
+            .ofInt(sky, "backgroundColor", sunsetSkyColor, nightSkyColor)
+            .setDuration(1500).apply {
+                setEvaluator(ArgbEvaluatorCompat())
+            }
 
-        sunsetSkyAnimator.start()
-        heightAnimator.start()
+        val animatorSet = AnimatorSet()
+
+        animatorSet.play(heightAnimator)
+            .with(sunsetSkyAnimator)
+            .before(nightSkyAnimator)
+
+        animatorSet.start()
+
     }
 }
