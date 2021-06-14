@@ -2,14 +2,14 @@ package net.eucalypto.designpatterns.state.states;
 
 import net.eucalypto.designpatterns.state.GumballMachine;
 
-public class SoldState implements State {
+public class WinnerState implements State {
 
   GumballMachine gumballMachine;
 
-  public SoldState(
-      GumballMachine gumballMachine) {
+  public WinnerState(GumballMachine gumballMachine) {
     this.gumballMachine = gumballMachine;
   }
+
 
   @Override
   public void insertQuarter() {
@@ -26,22 +26,25 @@ public class SoldState implements State {
   @Override
   public void turnCrank() {
     System.out
-        .println("Turning twice doesn't get you another gumball!");
+        .println(
+            "Turning twice doesn't get you another gumball! But wait.");
   }
 
   @Override
   public void dispense() {
     gumballMachine.releaseGumball();
     if (gumballMachine.getGumballCount() == 0) {
-      System.out.println("Out of gumballs");
       gumballMachine.setState(gumballMachine.getSoldOutState());
     } else {
-      gumballMachine.setState(gumballMachine.getNoQuarterState());
+      gumballMachine.releaseGumball();
+      System.out.println(
+          "You'RE A WINNER! You got two gumballs for your quarter");
+      if (gumballMachine.getGumballCount() > 0) {
+        gumballMachine.setState(gumballMachine.getNoQuarterState());
+      } else {
+        System.out.println("Oops, out of gumballs!");
+        gumballMachine.setState(gumballMachine.getSoldOutState());
+      }
     }
-  }
-
-  @Override
-  public String toString() {
-    return "Sold";
   }
 }

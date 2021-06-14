@@ -5,6 +5,7 @@ import net.eucalypto.designpatterns.state.states.NoQuarterState;
 import net.eucalypto.designpatterns.state.states.SoldOutState;
 import net.eucalypto.designpatterns.state.states.SoldState;
 import net.eucalypto.designpatterns.state.states.State;
+import net.eucalypto.designpatterns.state.states.WinnerState;
 
 public class GumballMachine {
 
@@ -12,6 +13,7 @@ public class GumballMachine {
   State hasQuarterState = new HasQuarterState(this);
   State soldOutState = new SoldOutState(this);
   State soldState = new SoldState(this);
+  State winnerState = new WinnerState(this);
   State state = noQuarterState;
   int gumballCount = 0;
 
@@ -42,6 +44,10 @@ public class GumballMachine {
     return soldState;
   }
 
+  public State getWinnerState() {
+    return winnerState;
+  }
+
   public void insertQuarter() {
     state.insertQuarter();
   }
@@ -59,7 +65,8 @@ public class GumballMachine {
     this.state = state;
   }
 
-  public void removeGumball() {
+  public void releaseGumball() {
+    System.out.println("A gumball comes rolling out the slot");
     gumballCount--;
   }
 

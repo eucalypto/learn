@@ -3,6 +3,32 @@ package net.eucalypto.designpatterns.state;
 public class GumballMachineTestDrive {
 
   public static void main(String[] args) {
+    testWinnerState();
+  }
+
+  private static void testWinnerState() {
+    var gumballMachine = new GumballMachine(5);
+
+    System.out.println(gumballMachine);
+
+    gumballMachine.insertQuarter();
+    gumballMachine.turnCrank();
+
+    System.out.println(gumballMachine);
+
+    gumballMachine.insertQuarter();
+    gumballMachine.turnCrank();
+    gumballMachine.insertQuarter();
+    gumballMachine.turnCrank();
+    gumballMachine.insertQuarter();
+    gumballMachine.turnCrank();
+    gumballMachine.insertQuarter();
+    gumballMachine.turnCrank();
+
+    System.out.println(gumballMachine);
+  }
+
+  private static void testMachine() {
     var gumballMachine = new GumballMachine(5);
 
     System.out.println(gumballMachine);
@@ -34,8 +60,7 @@ public class GumballMachineTestDrive {
     gumballMachine.insertQuarter();
     gumballMachine.turnCrank();
 
-    System.out.println(gumballMachine
-    );
+    System.out.println(gumballMachine);
   }
 
 }

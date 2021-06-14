@@ -1,9 +1,11 @@
 package net.eucalypto.designpatterns.state.states;
 
+import java.util.Random;
 import net.eucalypto.designpatterns.state.GumballMachine;
 
 public class HasQuarterState implements State {
 
+  Random randomGenerator = new Random(System.currentTimeMillis());
   GumballMachine gumballMachine;
 
   public HasQuarterState(
@@ -25,7 +27,16 @@ public class HasQuarterState implements State {
   @Override
   public void turnCrank() {
     System.out.println("You turned...");
-    gumballMachine.setState(gumballMachine.getSoldState());
+
+    var randomInt = randomGenerator.nextInt(10);
+    var isWinner = randomInt == 0;
+    var hasEnoughBalls = gumballMachine.getGumballCount() >= 2;
+
+    if (isWinner && hasEnoughBalls) {
+      gumballMachine.setState(gumballMachine.getWinnerState());
+    } else {
+      gumballMachine.setState(gumballMachine.getSoldState());
+    }
   }
 
   @Override
