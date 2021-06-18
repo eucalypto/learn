@@ -52,14 +52,14 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     // Dependencies for local unit tests
-    testImplementation "junit:junit:$junitVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+
 
     // AndroidX Test - Instrumented testing
     androidTestImplementation "androidx.test.ext:junit:$androidXTestExtKotlinRunnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
 
     // Hamcrest matching library
