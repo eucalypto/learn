@@ -6,7 +6,7 @@ import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class StatisticsUtilsKtTest {
+internal class StatisticsUtilsKtTest {
 
     @Nested
     inner class getActiveAndCompletedStats {
