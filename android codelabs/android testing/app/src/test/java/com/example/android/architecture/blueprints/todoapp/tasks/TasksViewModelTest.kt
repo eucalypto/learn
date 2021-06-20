@@ -2,7 +2,7 @@ package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.android.architecture.blueprints.todoapp.data.Task
-import com.example.android.architecture.blueprints.todoapp.data.source.FakeTasksRepository
+import com.example.android.architecture.blueprints.todoapp.data.source.FakeTestRepository
 import com.example.android.architecture.blueprints.todoapp.getOrAwaitValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -16,20 +16,20 @@ internal class TasksViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var fakeTasksRepository: FakeTasksRepository
+    private lateinit var fakeTestRepository: FakeTestRepository
 
     // The tested object
     private lateinit var viewModel: TasksViewModel
 
     @Before
     fun setUpViewModel() {
-        fakeTasksRepository = FakeTasksRepository()
+        fakeTestRepository = FakeTestRepository()
         val task1 = Task("Title1", "Description1")
         val task2 = Task("Title2", "Description2", true)
         val task3 = Task("Title3", "Description3", true)
-        fakeTasksRepository.addTasks(task1, task2, task3)
+        fakeTestRepository.addTasks(task1, task2, task3)
 
-        viewModel = TasksViewModel(fakeTasksRepository)
+        viewModel = TasksViewModel(fakeTestRepository)
     }
 
     @Test
