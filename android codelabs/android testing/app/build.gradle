@@ -28,6 +28,9 @@ android {
     packagingOptions {
         exclude "META-INF/AL2.0"
         exclude "META-INF/LGPL2.1"
+        exclude "win32-x86-64/attach_hotspot_windows.dll"
+        exclude "win32-x86/attach_hotspot_windows.dll"
+        exclude "META-INF/licenses/ASM"
     }
 
     testOptions.unitTests {
@@ -75,6 +78,9 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    androidTestImplementation 'org.mockito:mockito-core:3.11.1'
+    androidTestImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.28.1'
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
 
 
     // Kotlin
