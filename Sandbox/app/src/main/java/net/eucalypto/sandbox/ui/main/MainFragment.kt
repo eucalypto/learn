@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.eucalypto.sandbox.databinding.MainFragmentBinding
 import timber.log.Timber
@@ -41,6 +42,12 @@ class MainFragment : Fragment() {
 
         lifecycleScope.launch {
             Timber.d("lifecycleScope.launch{} : ${Thread.currentThread().name}")
+            launch {
+                delay(2000)
+                Timber.d("launch inside of coroutine : ${Thread.currentThread().name}")
+            }
+
+            Timber.d("lifecycleScope.launch{} end")
         }
 
         viewModel.testCoroutineScopes()
