@@ -42,11 +42,11 @@ class DevByteApplication : Application() {
      */
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
         delayedInit()
     }
 
     private fun delayedInit() = applicationScope.launch {
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
         setupRecurringWork()
     }
 
@@ -67,11 +67,12 @@ class DevByteApplication : Application() {
                 .setConstraints(constraints)
                 .build()
 
-        WorkManager.getInstance().enqueueUniquePeriodicWork(
-            RefreshDataWorker.WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP,
-            repeatingRequest
-        )
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniquePeriodicWork(
+                RefreshDataWorker.WORK_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                repeatingRequest
+            )
     }
 
 }

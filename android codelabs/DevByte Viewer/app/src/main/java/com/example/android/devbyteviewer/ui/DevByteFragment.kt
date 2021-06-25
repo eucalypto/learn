@@ -53,8 +53,11 @@ class DevByteFragment : Fragment() {
         }
         //The ViewModelProviders (plural) is deprecated.  
         //ViewModelProviders.of(this, DevByteViewModel.Factory(activity.application)).get(DevByteViewModel::class.java)
-        ViewModelProvider(this, DevByteViewModel.Factory(activity.application)).get(DevByteViewModel::class.java)
-                
+        ViewModelProvider(
+            this,
+            DevByteViewModel.Factory(activity.application)
+        ).get(DevByteViewModel::class.java)
+
     }
 
     /**
@@ -70,11 +73,13 @@ class DevByteFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.playlist.observe(viewLifecycleOwner, Observer<List<Video>> { videos ->
-            videos?.apply {
-                viewModelAdapter?.videos = videos
-            }
-        })
+        viewModel.playlist.observe(
+            viewLifecycleOwner,
+            Observer<List<Video>> { videos ->
+                videos?.apply {
+                    viewModelAdapter?.videos = videos
+                }
+            })
     }
 
     /**
@@ -93,13 +98,16 @@ class DevByteFragment : Fragment() {
      *
      * @return Return the View for the fragment's UI.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val binding: FragmentDevByteBinding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_dev_byte,
-                container,
-                false)
+            inflater,
+            R.layout.fragment_dev_byte,
+            container,
+            false
+        )
         // Set the lifecycleOwner so DataBinding can observe LiveData
         binding.setLifecycleOwner(viewLifecycleOwner)
 
@@ -114,7 +122,7 @@ class DevByteFragment : Fragment() {
 
             // Try to generate a direct intent to the YouTube app
             var intent = Intent(Intent.ACTION_VIEW, it.launchUri)
-            if(intent.resolveActivity(packageManager) == null) {
+            if (intent.resolveActivity(packageManager) == null) {
                 // YouTube app isn't found, use the web url
                 intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.url))
             }
@@ -156,7 +164,8 @@ class VideoClick(val block: (Video) -> Unit) {
 /**
  * RecyclerView Adapter for setting up data binding on the items in the list.
  */
-class DevByteAdapter(val callback: VideoClick) : RecyclerView.Adapter<DevByteViewHolder>() {
+class DevByteAdapter(val callback: VideoClick) :
+    RecyclerView.Adapter<DevByteViewHolder>() {
 
     /**
      * The videos that our Adapter will show
@@ -175,12 +184,16 @@ class DevByteAdapter(val callback: VideoClick) : RecyclerView.Adapter<DevByteVie
      * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
      * an item.
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DevByteViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): DevByteViewHolder {
         val withDataBinding: DevbyteItemBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                DevByteViewHolder.LAYOUT,
-                parent,
-                false)
+            LayoutInflater.from(parent.context),
+            DevByteViewHolder.LAYOUT,
+            parent,
+            false
+        )
         return DevByteViewHolder(withDataBinding)
     }
 
@@ -204,7 +217,7 @@ class DevByteAdapter(val callback: VideoClick) : RecyclerView.Adapter<DevByteVie
  * ViewHolder for DevByte items. All work is done by data binding.
  */
 class DevByteViewHolder(val viewDataBinding: DevbyteItemBinding) :
-        RecyclerView.ViewHolder(viewDataBinding.root) {
+    RecyclerView.ViewHolder(viewDataBinding.root) {
     companion object {
         @LayoutRes
         val LAYOUT = R.layout.devbyte_item
