@@ -17,4 +17,5 @@
 
 <resources>
     <string name="app_name">DevByte Viewer</string>
+    <string name="refresh_failed">No internet connection. Could not refresh videos from internet.</string>
 </resources>
