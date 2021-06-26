@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
+import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
@@ -31,12 +32,10 @@ import java.net.UnknownHostException
  */
 class OverviewViewModel : ViewModel() {
 
-    // The internal MutableLiveData String that stores the status of the most recent request
-    private val _response = MutableLiveData<String>()
+    private val _marsProperty = MutableLiveData<MarsProperty>()
 
-    // The external immutable LiveData for the request status String
-    val response: LiveData<String>
-        get() = _response
+    val marsProperty: LiveData<MarsProperty>
+        get() = _marsProperty
 
     /**
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
@@ -51,11 +50,10 @@ class OverviewViewModel : ViewModel() {
     private fun getMarsRealEstateProperties() = viewModelScope.launch {
         try {
             val properties = MarsApi.retrofitService.getProperties().await()
-            _response.value = "Success ${properties.size} Mars properties found"
+            _marsProperty.value = properties.first()
             Timber.d("Success ${properties.size} Mars properties found")
         } catch (e: UnknownHostException) {
             Timber.d(e, "Error")
-            _response.value = "Failure: ${e.message}"
         }
     }
 
