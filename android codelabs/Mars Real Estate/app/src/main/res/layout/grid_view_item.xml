@@ -32,10 +32,9 @@
         android:id="@+id/mars_image"
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:layout_margin="2dp"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
         android:padding="2dp"
+        android:scaleType="centerCrop"
         app:imageUrl="@{marsProperty.imgSrcUrl}"
         tools:src="@tools:sample/backgrounds/scenic" />
 </layout>

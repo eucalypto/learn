@@ -17,16 +17,17 @@
 
 package com.example.android.marsrealestate.overview
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.marsrealestate.databinding.GridViewItemBinding
 import com.example.android.marsrealestate.network.MarsProperty
 
 
-class PhotoGridAdapter(private val marsProperties: List<MarsProperty>) :
-    RecyclerView.Adapter<PropertyViewHolder>() {
+class PhotoGridAdapter :
+    ListAdapter<MarsProperty, PropertyViewHolder>(MarsPropertyItemCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -36,12 +37,26 @@ class PhotoGridAdapter(private val marsProperties: List<MarsProperty>) :
     }
 
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
-        val marsProperty = marsProperties[position]
+        val marsProperty = getItem(position)
         holder.bindTo(marsProperty)
     }
 
-    override fun getItemCount(): Int {
-        return marsProperties.size
+}
+
+class MarsPropertyItemCallback : DiffUtil.ItemCallback<MarsProperty>() {
+
+    override fun areItemsTheSame(
+        oldItem: MarsProperty,
+        newItem: MarsProperty
+    ): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(
+        oldItem: MarsProperty,
+        newItem: MarsProperty
+    ): Boolean {
+        return oldItem == newItem
     }
 
 }
@@ -58,14 +73,9 @@ private constructor(private val binding: GridViewItemBinding) :
 
     companion object {
         fun from(parent: ViewGroup): PropertyViewHolder {
-            val inflater = layoutInflaterFrom(parent)
+            val inflater = LayoutInflater.from(parent.context)
             val binding = GridViewItemBinding.inflate(inflater, parent, false)
             return PropertyViewHolder(binding)
-        }
-
-        private fun layoutInflaterFrom(parent: ViewGroup): LayoutInflater {
-            return parent.context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         }
     }
 
