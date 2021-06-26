@@ -32,10 +32,10 @@ import java.net.UnknownHostException
  */
 class OverviewViewModel : ViewModel() {
 
-    private val _marsProperty = MutableLiveData<MarsProperty>()
+    private val _marsProperties = MutableLiveData<List<MarsProperty>>()
 
-    val marsProperty: LiveData<MarsProperty>
-        get() = _marsProperty
+    val marsProperties: LiveData<List<MarsProperty>>
+        get() = _marsProperties
 
     /**
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
@@ -49,8 +49,10 @@ class OverviewViewModel : ViewModel() {
      */
     private fun getMarsRealEstateProperties() = viewModelScope.launch {
         try {
-            val properties = MarsApi.retrofitService.getProperties().await()
-            _marsProperty.value = properties.first()
+            val properties = MarsApi.retrofitService
+                .getPropertiesAsync().await()
+
+            _marsProperties.value = properties
             Timber.d("Success ${properties.size} Mars properties found")
         } catch (e: UnknownHostException) {
             Timber.d(e, "Error")

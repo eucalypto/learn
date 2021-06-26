@@ -16,3 +16,57 @@
  */
 
 package com.example.android.marsrealestate.overview
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.android.marsrealestate.databinding.GridViewItemBinding
+import com.example.android.marsrealestate.network.MarsProperty
+
+
+class PhotoGridAdapter(private val marsProperties: List<MarsProperty>) :
+    RecyclerView.Adapter<PropertyViewHolder>() {
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PropertyViewHolder {
+        return PropertyViewHolder.from(parent)
+    }
+
+    override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
+        val marsProperty = marsProperties[position]
+        holder.bindTo(marsProperty)
+    }
+
+    override fun getItemCount(): Int {
+        return marsProperties.size
+    }
+
+}
+
+
+class PropertyViewHolder
+private constructor(private val binding: GridViewItemBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    fun bindTo(marsProperty: MarsProperty) {
+        binding.marsProperty = marsProperty
+        binding.executePendingBindings()
+    }
+
+    companion object {
+        fun from(parent: ViewGroup): PropertyViewHolder {
+            val inflater = layoutInflaterFrom(parent)
+            val binding = GridViewItemBinding.inflate(inflater, parent, false)
+            return PropertyViewHolder(binding)
+        }
+
+        private fun layoutInflaterFrom(parent: ViewGroup): LayoutInflater {
+            return parent.context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        }
+    }
+
+}
