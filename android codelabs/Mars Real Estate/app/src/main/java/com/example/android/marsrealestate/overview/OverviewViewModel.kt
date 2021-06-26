@@ -20,12 +20,11 @@ package com.example.android.marsrealestate.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
-import com.example.android.marsrealestate.network.MarsProperty
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.net.UnknownHostException
 
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
@@ -49,27 +48,15 @@ class OverviewViewModel : ViewModel() {
     /**
      * Sets the value of the status LiveData to the Mars API status.
      */
-    private fun getMarsRealEstateProperties() {
-        MarsApi.retrofitService.getProperties()
-            .enqueue(object : Callback<List<MarsProperty>> {
-
-                override fun onResponse(
-                    call: Call<List<MarsProperty>>,
-                    response: Response<List<MarsProperty>>
-                ) {
-                    _response.value =
-                        "Success: ${response.body()?.size} Mars properties retrieved"
-                    Timber.d("Success: ${response.body()?.size} Mars properties retrieve")
-                }
-
-                override fun onFailure(
-                    call: Call<List<MarsProperty>>,
-                    t: Throwable
-                ) {
-                    _response.value = "Failure: ${t.message}"
-                    Timber.d(t, "Call: ${call.request()}")
-                }
-
-            })
+    private fun getMarsRealEstateProperties() = viewModelScope.launch {
+        try {
+            val properties = MarsApi.retrofitService.getProperties().await()
+            _response.value = "Success ${properties.size} Mars properties found"
+            Timber.d("Success ${properties.size} Mars properties found")
+        } catch (e: UnknownHostException) {
+            Timber.d(e, "Error")
+            _response.value = "Failure: ${e.message}"
+        }
     }
+
 }
