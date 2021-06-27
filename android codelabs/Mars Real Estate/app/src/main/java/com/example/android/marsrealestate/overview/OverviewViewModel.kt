@@ -40,6 +40,19 @@ class OverviewViewModel : ViewModel() {
     val networkStatus: LiveData<NetworkStatus>
         get() = _networkStatus
 
+
+    private val _navigateToDetail = MutableLiveData<MarsProperty>()
+    val navigateToDetail: LiveData<MarsProperty>
+        get() = _navigateToDetail
+
+    fun navigateToDetailStart(marsProperty: MarsProperty) {
+        _navigateToDetail.value = marsProperty
+    }
+
+    fun navigateToDetailDone() {
+        _navigateToDetail.value = null
+    }
+
     /**
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
@@ -64,9 +77,7 @@ class OverviewViewModel : ViewModel() {
             _networkStatus.value = NetworkStatus.ERROR
         }
     }
-
 }
-
 
 enum class NetworkStatus {
     LOADING, ERROR, DONE

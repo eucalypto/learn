@@ -26,14 +26,14 @@ import com.example.android.marsrealestate.databinding.GridViewItemBinding
 import com.example.android.marsrealestate.network.MarsProperty
 
 
-class PhotoGridAdapter :
+class PhotoGridAdapter(private val onItemClicked: (MarsProperty) -> Unit) :
     ListAdapter<MarsProperty, PropertyViewHolder>(MarsPropertyItemCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): PropertyViewHolder {
-        return PropertyViewHolder.from(parent)
+        return PropertyViewHolder.from(parent, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
@@ -63,19 +63,28 @@ class MarsPropertyItemCallback : DiffUtil.ItemCallback<MarsProperty>() {
 
 
 class PropertyViewHolder
-private constructor(private val binding: GridViewItemBinding) :
+private constructor(
+    private val binding: GridViewItemBinding,
+    private val onItemClicked: (MarsProperty) -> Unit
+) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bindTo(marsProperty: MarsProperty) {
         binding.marsProperty = marsProperty
+        binding.marsImage.setOnClickListener {
+            onItemClicked(marsProperty)
+        }
         binding.executePendingBindings()
     }
 
     companion object {
-        fun from(parent: ViewGroup): PropertyViewHolder {
+        fun from(
+            parent: ViewGroup,
+            onClick: (MarsProperty) -> Unit
+        ): PropertyViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = GridViewItemBinding.inflate(inflater, parent, false)
-            return PropertyViewHolder(binding)
+            return PropertyViewHolder(binding, onClick)
         }
     }
 

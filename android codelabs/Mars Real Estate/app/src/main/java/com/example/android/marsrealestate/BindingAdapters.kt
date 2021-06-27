@@ -19,6 +19,7 @@ package com.example.android.marsrealestate
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -68,4 +69,12 @@ fun bindNetworkStatus(imageView: ImageView, networkStatus: NetworkStatus?) {
             imageView.visibility = View.GONE
         }
     }
+}
+
+@BindingAdapter("price")
+fun bindPrice(textView: TextView, price: Double?) {
+    if (price == null) return
+
+    val priceString = "$${price}"
+    textView.text = priceString
 }
