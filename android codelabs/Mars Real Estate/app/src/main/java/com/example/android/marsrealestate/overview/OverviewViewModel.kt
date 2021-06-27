@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
+import com.example.android.marsrealestate.network.MarsApiFilter
 import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -57,17 +58,20 @@ class OverviewViewModel : ViewModel() {
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
     init {
-        getMarsRealEstateProperties()
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)
     }
 
     /**
      * Sets the value of the networkStatus LiveData to the Mars API networkStatus.
      */
-    private fun getMarsRealEstateProperties() = viewModelScope.launch {
+    private fun getMarsRealEstateProperties(
+        filter: MarsApiFilter
+    ) = viewModelScope.launch {
+
         try {
             _networkStatus.value = NetworkStatus.LOADING
             val properties = MarsApi.retrofitService
-                .getPropertiesAsync().await()
+                .getPropertiesAsync(filter.value).await()
 
             _marsProperties.value = properties
             Timber.d("Success ${properties.size} Mars properties found")
@@ -76,6 +80,11 @@ class OverviewViewModel : ViewModel() {
             Timber.d(e, "Error")
             _networkStatus.value = NetworkStatus.ERROR
         }
+    }
+
+
+    fun updateFilter(filter: MarsApiFilter) {
+        getMarsRealEstateProperties(filter)
     }
 }
 
