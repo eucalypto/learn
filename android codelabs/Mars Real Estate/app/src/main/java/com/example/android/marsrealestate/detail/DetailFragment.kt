@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 
@@ -31,14 +32,13 @@ import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 class DetailFragment : Fragment() {
 
     private val args: DetailFragmentArgs by navArgs()
+    private lateinit var viewModel: DetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        @Suppress("UNUSED_VARIABLE")
-        val application = requireNotNull(activity).application
         val binding = FragmentDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this
         return binding.root
@@ -47,7 +47,16 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(
+            this,
+            DetailViewModelFactory(
+                args.marsProperty,
+                requireActivity().application
+            )
+        ).get(DetailViewModel::class.java)
+
         val binding = DataBindingUtil.getBinding<FragmentDetailBinding>(view)!!
-        binding.marsProperty = args.marsProperty
+        binding.viewModel = viewModel
+
     }
 }

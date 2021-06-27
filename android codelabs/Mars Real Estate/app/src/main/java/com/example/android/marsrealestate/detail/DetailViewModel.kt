@@ -19,11 +19,28 @@ package com.example.android.marsrealestate.detail
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.network.MarsProperty
 
 /**
  * The [ViewModel] that is associated with the [DetailFragment].
  */
-class DetailViewModel(marsProperty: MarsProperty, app: Application) :
-    AndroidViewModel(app) {
+class DetailViewModel(
+    marsProperty: MarsProperty,
+    app: Application
+) : AndroidViewModel(app) {
+
+    val imgSrcUrl = marsProperty.imgSrcUrl
+    val price = app.getString(
+        if (marsProperty.isRental)
+            R.string.display_price_monthly_rental
+        else
+            R.string.display_price,
+        marsProperty.price
+    )
+
+    private val displayPrice =
+        app.getString(if (marsProperty.isRental) R.string.type_rent else R.string.type_sale)
+
+    val displayType = app.getString(R.string.display_type, displayPrice)
 }

@@ -24,8 +24,8 @@
     <data>
 
         <variable
-            name="marsProperty"
-            type="com.example.android.marsrealestate.network.MarsProperty" />
+            name="viewModel"
+            type="com.example.android.marsrealestate.detail.DetailViewModel" />
     </data>
 
     <ScrollView
@@ -43,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="266dp"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{marsProperty.imgSrcUrl}"
+                app:imageUrl="@{viewModel.imgSrcUrl}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@{marsProperty.type}"
+                android:text="@{viewModel.displayType}"
                 android:textColor="#de000000"
                 android:textSize="39sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -66,11 +66,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:text="@{viewModel.price}"
                 android:textColor="#de000000"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/property_type_text"
-                app:price="@{marsProperty.price}"
                 tools:text="$100,000" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
