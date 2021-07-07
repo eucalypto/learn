@@ -16,10 +16,9 @@
 
 package com.example.android.navigation
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -57,5 +56,36 @@ class GameWonFragment : Fragment() {
             "Got arguments: ${args.numCorrect}, ${args.numQuestions}",
             Toast.LENGTH_LONG
         ).show()
+
+        setHasOptionsMenu(true)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.winner_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.share -> {
+                val args = GameWonFragmentArgs.fromBundle(arguments!!)
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                    .putExtra(
+                        Intent.EXTRA_TEXT,
+                        "Look at me! I have answered ${args.numQuestions} questions" +
+                                " of which I answered ${args.numCorrect} correctly"
+                    )
+                    .setType("text/plain")
+
+                startActivity(Intent.createChooser(shareIntent, null))
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+
 }
