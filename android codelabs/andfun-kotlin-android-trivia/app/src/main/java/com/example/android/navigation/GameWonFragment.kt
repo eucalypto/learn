@@ -17,6 +17,7 @@
 package com.example.android.navigation
 
 import android.content.Intent
+import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -65,29 +66,40 @@ class GameWonFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
 
         inflater.inflate(R.menu.winner_menu, menu)
+
+        val resolved =
+            requireContext().packageManager.resolveActivity(
+                getShareIntent(),
+                MATCH_DEFAULT_ONLY
+            )
+        if (resolved == null) {
+            menu.findItem(R.id.share).isVisible = false
+
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.share -> {
-                val args = GameWonFragmentArgs.fromBundle(arguments!!)
-
-                val shareIntent =
-                    ShareCompat.IntentBuilder.from(requireActivity())
-                        .setText(
-                            "Look at me! I have answered ${args.numQuestions} questions" +
-                                    " of which I answered ${args.numCorrect} correctly"
-                        )
-                        .setType("text/plain")
-                        .intent
-
-                startActivity(Intent.createChooser(shareIntent, null))
+                startActivity(getShareIntent())
                 true
             }
             else -> {
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    private fun getShareIntent(): Intent {
+        val args = GameWonFragmentArgs.fromBundle(arguments!!)
+
+        return ShareCompat.IntentBuilder.from(requireActivity())
+            .setText(
+                "Look at me! I have answered ${args.numQuestions} questions" +
+                        " of which I answered ${args.numCorrect} correctly"
+            )
+                .setType("text/plain")
+            .intent
     }
 
 
