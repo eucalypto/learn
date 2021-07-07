@@ -24,7 +24,7 @@ class TitleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val binding: FragmentTitleBinding =
-            DataBindingUtil.getBinding<FragmentTitleBinding>(view)!!
+            DataBindingUtil.getBinding(view)!!
 
         binding.playButton.setOnClickListener(
             Navigation.createNavigateOnClickListener(
