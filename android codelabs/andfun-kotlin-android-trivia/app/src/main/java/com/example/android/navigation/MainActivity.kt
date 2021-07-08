@@ -50,7 +50,19 @@ class MainActivity : AppCompatActivity() {
             binding.navigationDrawer,
             navController
         )
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            drawerLayout.setDrawerLockMode(
+                if (destination.id == controller.graph.startDestination) {
+                    DrawerLayout.LOCK_MODE_UNLOCKED
+                } else {
+                    DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+                }
+            )
+        }
+
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, drawerLayout)
