@@ -16,8 +16,16 @@
 
 package com.example.android.advancedcoroutines
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -56,6 +64,8 @@ class PlantListViewModel internal constructor(
      */
     private val growZone = MutableLiveData<GrowZone>(NoGrowZone)
 
+    private val growZoneFlow = MutableStateFlow<GrowZone>(NoGrowZone)
+
     /**
      * A list of plants that updates based on the current filter.
      */
@@ -67,8 +77,15 @@ class PlantListViewModel internal constructor(
         }
     }
 
+    @ExperimentalCoroutinesApi
     val plantsUsingFlow: LiveData<List<Plant>> =
-        plantRepository.plantsFlow.asLiveData()
+        growZoneFlow.flatMapLatest { growZone ->
+            if (growZone == NoGrowZone) {
+                plantRepository.plantsFlow
+            } else {
+                plantRepository.getPlantsWithGrowZoneFlow(growZone)
+            }
+        }.asLiveData()
 
     init {
         // When creating a new ViewModel, clear the grow zone and perform any related udpates
@@ -85,9 +102,14 @@ class PlantListViewModel internal constructor(
      */
     fun setGrowZoneNumber(num: Int) {
         growZone.value = GrowZone(num)
+        growZoneFlow.value = GrowZone(num)
 
         // initial code version, will move during flow rewrite
-        launchDataLoad { plantRepository.tryUpdateRecentPlantsCache() }
+        launchDataLoad {
+            plantRepository.tryUpdateRecentPlantsForGrowZoneCache(
+                GrowZone(num)
+            )
+        }
     }
 
     /**
@@ -98,6 +120,7 @@ class PlantListViewModel internal constructor(
      */
     fun clearGrowZoneNumber() {
         growZone.value = NoGrowZone
+        growZoneFlow.value = NoGrowZone
 
         // initial code version, will move during flow rewrite
         launchDataLoad { plantRepository.tryUpdateRecentPlantsCache() }
