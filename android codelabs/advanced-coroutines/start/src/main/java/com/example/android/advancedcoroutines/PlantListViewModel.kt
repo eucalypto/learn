@@ -25,7 +25,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -88,10 +93,30 @@ class PlantListViewModel internal constructor(
         }.asLiveData()
 
     init {
-        // When creating a new ViewModel, clear the grow zone and perform any related udpates
+        // When creating a new ViewModel, clear the grow zone and perform any
+        // related updates
         clearGrowZoneNumber()
 
-        launchDataLoad { plantRepository.tryUpdateRecentPlantsCache() }
+        loadDataFor(growZoneFlow) { growZone ->
+            if (growZone == NoGrowZone) {
+                plantRepository.tryUpdateRecentPlantsCache()
+            } else {
+                plantRepository.tryUpdateRecentPlantsForGrowZoneCache(growZone)
+            }
+        }
+    }
+
+    private fun <T> loadDataFor(
+        source: StateFlow<T>,
+        block: suspend (T) -> Unit
+    ) {
+        source.mapLatest {
+            _spinner.value = true
+            block(it)
+        }
+            .onEach { _spinner.value = false }
+            .catch { cause -> _snackbar.value = cause.message }
+            .launchIn(viewModelScope)
     }
 
     /**
@@ -103,13 +128,6 @@ class PlantListViewModel internal constructor(
     fun setGrowZoneNumber(num: Int) {
         growZone.value = GrowZone(num)
         growZoneFlow.value = GrowZone(num)
-
-        // initial code version, will move during flow rewrite
-        launchDataLoad {
-            plantRepository.tryUpdateRecentPlantsForGrowZoneCache(
-                GrowZone(num)
-            )
-        }
     }
 
     /**
@@ -121,9 +139,6 @@ class PlantListViewModel internal constructor(
     fun clearGrowZoneNumber() {
         growZone.value = NoGrowZone
         growZoneFlow.value = NoGrowZone
-
-        // initial code version, will move during flow rewrite
-        launchDataLoad { plantRepository.tryUpdateRecentPlantsCache() }
     }
 
     /**
