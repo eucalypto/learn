@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 /**
@@ -59,6 +60,13 @@ class PlantRepository private constructor(
         })
     }
 
+    private var plantListSortOrderCache =
+        CacheOnSuccess(onErrorFallback = { listOf<String>() }) {
+            plantService.customPlantSortOrder()
+        }
+
+    private val customSortFlow = plantListSortOrderCache::getOrAwait.asFlow()
+
     val plantsFlow: Flow<List<Plant>>
         get() = plantDao.getPlantsFlow()
             .combine(customSortFlow) { plants, sortOrder ->
@@ -69,14 +77,13 @@ class PlantRepository private constructor(
 
     fun getPlantsWithGrowZoneFlow(growZoneNumber: GrowZone): Flow<List<Plant>> {
         return plantDao.getPlantsWithGrowZoneNumberFlow(growZoneNumber.number)
+            .map { plantList ->
+                val sortOrderFromNetwork = plantListSortOrderCache.getOrAwait()
+                val nextValue =
+                    plantList.applyMainSafeSort(sortOrderFromNetwork)
+                nextValue
+            }
     }
-
-    private var plantListSortOrderCache =
-        CacheOnSuccess(onErrorFallback = { listOf<String>() }) {
-            plantService.customPlantSortOrder()
-        }
-
-    private val customSortFlow = plantListSortOrderCache::getOrAwait.asFlow()
 
     /**
      * Fetch a list of [Plant]s from the database that matches a given [GrowZone].
