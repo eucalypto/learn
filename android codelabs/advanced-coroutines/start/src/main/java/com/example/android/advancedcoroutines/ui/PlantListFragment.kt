@@ -17,12 +17,7 @@
 package com.example.android.advancedcoroutines.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -45,7 +40,8 @@ class PlantListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentPlantListBinding.inflate(inflater, container, false)
+        val binding =
+            FragmentPlantListBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
         // show the spinner when [spinner] is true
@@ -84,7 +80,7 @@ class PlantListFragment : Fragment() {
     }
 
     private fun subscribeUi(adapter: PlantAdapter) {
-        viewModel.plants.observe(viewLifecycleOwner) { plants ->
+        viewModel.plantsUsingFlow.observe(viewLifecycleOwner) { plants ->
             adapter.submitList(plants)
         }
     }
@@ -108,5 +104,6 @@ class PlantListViewModelFactory(
 ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>) = PlantListViewModel(repository) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>) =
+        PlantListViewModel(repository) as T
 }
