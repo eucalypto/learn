@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.android.unscramble.R
 import com.example.android.unscramble.databinding.GameFragmentBinding
 
@@ -37,7 +37,7 @@ class GameFragment : Fragment() {
     // Create a ViewModel the first time the fragment is created.
     // If the fragment is re-created, it receives the same GameViewModel instance created by the
     // first fragment
-    private val viewModel: GameViewModel by viewModels()
+    private val viewModel: GameViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,11 +54,14 @@ class GameFragment : Fragment() {
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
-        // Update the UI
+        updateUI()
+    }
+
+    private fun updateUI() {
         updateNextWordOnScreen()
-        binding.score.text = getString(R.string.score, 0)
+        binding.score.text = getString(R.string.score, viewModel.score)
         binding.wordCount.text = getString(
-            R.string.word_count, 0, MAX_NO_OF_WORDS
+            R.string.word_count, viewModel.currentWordCount, MAX_NO_OF_WORDS
         )
     }
 
@@ -67,6 +70,14 @@ class GameFragment : Fragment() {
     * Displays the next scrambled word.
     */
     private fun onSubmitWord() {
+        if (viewModel.nextWord()) {
+            updateUI()
+        } else {
+            GameOverDialogFragment().show(
+                childFragmentManager,
+                "GameOverDialog"
+            )
+        }
     }
 
     /*
@@ -89,7 +100,7 @@ class GameFragment : Fragment() {
      * Re-initializes the data in the ViewModel and updates the views with the new data, to
      * restart the game.
      */
-    private fun restartGame() {
+    internal fun restartGame() {
         setErrorTextField(false)
         updateNextWordOnScreen()
     }
@@ -97,7 +108,7 @@ class GameFragment : Fragment() {
     /*
      * Exits the game.
      */
-    private fun exitGame() {
+    internal fun exitGame() {
         activity?.finish()
     }
 
