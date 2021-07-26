@@ -17,21 +17,42 @@ class GameViewModel : ViewModel() {
 
 
     init {
-        getNextWord()
+        updateNextWord()
     }
 
-    fun getNextWord() {
+    fun nextWord(): Boolean {
+        return if (currentWordCount < MAX_NO_OF_WORDS) {
+            updateNextWord()
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun updateNextWord() {
+        updateNextUnusedWord()
+        updateShuffledWord()
+        updateWordStatistics()
+    }
+
+    private fun updateNextUnusedWord() {
         do {
             currentWord = allWordsList.random()
         } while (currentWord in usedWords)
+    }
 
-        val scrambled = currentWord.toCharArray()
+    private fun updateShuffledWord() {
         do {
-            scrambled.shuffle()
-        } while (String(scrambled) == currentWord)
+            _currentScrambledWord = currentWord.shuffle()
+        } while (currentScrambledWord == currentWord)
+    }
 
-        _currentScrambledWord = String(scrambled)
+    private fun updateWordStatistics() {
         currentWordCount++
         usedWords.add(currentWord)
     }
+}
+
+fun String.shuffle(): String {
+    return String(this.toCharArray().apply { shuffle() })
 }
