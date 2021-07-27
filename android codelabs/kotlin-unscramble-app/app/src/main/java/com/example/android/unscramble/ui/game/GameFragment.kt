@@ -71,17 +71,11 @@ class GameFragment : Fragment() {
     */
     private fun onSubmitWord() {
 
-        viewModel.nextWord()
+        val guess = binding.textInputEditText.text.toString()
+        viewModel.checkUserInput(guess)
+        setErrorTextField(!viewModel.hasGuessedCorrectly)
 
-        if (viewModel.gameIsFinished) {
-            GameOverDialogFragment().show(
-                childFragmentManager,
-                "GameOverDialog"
-            )
-            return
-        }
-
-        updateUI()
+        nextWordOrGameFinishDialog()
     }
 
     /*
@@ -89,6 +83,12 @@ class GameFragment : Fragment() {
      * Increases the word count.
      */
     private fun onSkipWord() {
+        nextWordOrGameFinishDialog()
+        setErrorTextField(false)
+    }
+
+    private fun nextWordOrGameFinishDialog() {
+
         viewModel.nextWord()
 
         if (viewModel.gameIsFinished) {
@@ -100,15 +100,6 @@ class GameFragment : Fragment() {
         }
 
         updateUI()
-    }
-
-    /*
-     * Gets a random word for the list of words and shuffles the letters in it.
-     */
-    private fun getNextScrambledWord(): String {
-        val tempWord = allWordsList.random().toCharArray()
-        tempWord.shuffle()
-        return String(tempWord)
     }
 
     /*
@@ -117,7 +108,8 @@ class GameFragment : Fragment() {
      */
     internal fun restartGame() {
         setErrorTextField(false)
-        updateNextWordOnScreen()
+        viewModel.resetGame()
+        updateUI()
     }
 
     /*

@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
 
+    private var _hasGuessedCorrectly = true
+    val hasGuessedCorrectly get() = _hasGuessedCorrectly
+
     private var _score = 0
     val score get() = _score
 
@@ -24,6 +27,15 @@ class GameViewModel : ViewModel() {
 
     init {
         updateNextWord()
+    }
+
+    fun checkUserInput(userInput: String) {
+        if (userInput == currentWord) {
+            _score += SCORE_INCREASE
+            _hasGuessedCorrectly = true
+        } else {
+            _hasGuessedCorrectly = false
+        }
     }
 
     fun nextWord() {
@@ -59,6 +71,14 @@ class GameViewModel : ViewModel() {
     private fun updateWordStatistics() {
         _currentWordCount++
         usedWords.add(currentWord)
+    }
+
+    fun resetGame() {
+        _score = 0
+        _currentWordCount = 0
+        usedWords.clear()
+        _gameIsFinished = false
+        updateNextWord()
     }
 }
 
