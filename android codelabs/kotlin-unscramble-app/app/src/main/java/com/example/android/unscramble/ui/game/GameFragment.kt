@@ -70,14 +70,18 @@ class GameFragment : Fragment() {
     * Displays the next scrambled word.
     */
     private fun onSubmitWord() {
-        if (viewModel.nextWord()) {
-            updateUI()
-        } else {
+
+        viewModel.nextWord()
+
+        if (viewModel.gameIsFinished) {
             GameOverDialogFragment().show(
                 childFragmentManager,
                 "GameOverDialog"
             )
+            return
         }
+
+        updateUI()
     }
 
     /*
@@ -85,6 +89,17 @@ class GameFragment : Fragment() {
      * Increases the word count.
      */
     private fun onSkipWord() {
+        viewModel.nextWord()
+
+        if (viewModel.gameIsFinished) {
+            GameOverDialogFragment().show(
+                childFragmentManager,
+                "GameOverDialog"
+            )
+            return
+        }
+
+        updateUI()
     }
 
     /*

@@ -18,17 +18,23 @@ class GameViewModel : ViewModel() {
     val currentScrambledWord
         get() = _currentScrambledWord
 
+    private var _gameIsFinished = false
+    val gameIsFinished get() = _gameIsFinished
+
 
     init {
         updateNextWord()
     }
 
-    fun nextWord(): Boolean {
-        return if (currentWordCount < MAX_NO_OF_WORDS) {
-            updateNextWord()
-            true
-        } else {
-            false
+    fun nextWord() {
+        updateGameIsFinished()
+        if (gameIsFinished) return
+        updateNextWord()
+    }
+
+    private fun updateGameIsFinished() {
+        if (currentWordCount >= MAX_NO_OF_WORDS) {
+            _gameIsFinished = true
         }
     }
 
