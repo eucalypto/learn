@@ -1,5 +1,7 @@
 package com.example.android.unscramble.ui.game
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
@@ -7,18 +9,18 @@ class GameViewModel : ViewModel() {
     private var _hasGuessedCorrectly = true
     val hasGuessedCorrectly get() = _hasGuessedCorrectly
 
-    private var _score = 0
-    val score get() = _score
+    private val _score = MutableLiveData(0)
+    val score get() = _score as LiveData<Int>
 
-    private var _currentWordCount = 0
-    val currentWordCount get() = _currentWordCount
+    private var _currentWordCount = MutableLiveData(0)
+    val currentWordCount get() = _currentWordCount as LiveData<Int>
 
     private lateinit var currentWord: String
 
     private val usedWords = mutableListOf<String>()
 
-    private lateinit var _currentScrambledWord: String
-    val currentScrambledWord
+    private val _currentScrambledWord = MutableLiveData<String>()
+    val currentScrambledWord: LiveData<String>
         get() = _currentScrambledWord
 
     private var _gameIsFinished = false
@@ -31,7 +33,7 @@ class GameViewModel : ViewModel() {
 
     fun checkUserInput(userInput: String) {
         if (userInput.equals(currentWord, ignoreCase = true)) {
-            _score += SCORE_INCREASE
+            _score.value = score.value?.plus(SCORE_INCREASE)
             _hasGuessedCorrectly = true
         } else {
             _hasGuessedCorrectly = false
@@ -45,8 +47,8 @@ class GameViewModel : ViewModel() {
     }
 
     private fun updateGameIsFinished() {
-        if (currentWordCount >= MAX_NO_OF_WORDS) {
-            _gameIsFinished = true
+        currentWordCount.value?.let {
+            if (it >= MAX_NO_OF_WORDS) _gameIsFinished = true
         }
     }
 
@@ -64,18 +66,18 @@ class GameViewModel : ViewModel() {
 
     private fun updateShuffledWord() {
         do {
-            _currentScrambledWord = currentWord.shuffle()
-        } while (currentScrambledWord == currentWord)
+            _currentScrambledWord.value = currentWord.shuffle()
+        } while (currentScrambledWord.value == currentWord)
     }
 
     private fun updateWordStatistics() {
-        _currentWordCount++
+        _currentWordCount.value = _currentWordCount.value?.inc()
         usedWords.add(currentWord)
     }
 
     fun resetGame() {
-        _score = 0
-        _currentWordCount = 0
+        _score.value = 0
+        _currentWordCount.value = 0
         usedWords.clear()
         _gameIsFinished = false
         updateNextWord()
