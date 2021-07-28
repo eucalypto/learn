@@ -57,14 +57,6 @@ class GameFragment : Fragment() {
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
-        viewModel.score.observe(viewLifecycleOwner) {
-            binding.score.text = getString(R.string.score, it)
-        }
-        viewModel.currentWordCount.observe(viewLifecycleOwner) {
-            binding.wordCount.text = getString(
-                R.string.word_count, it, MAX_NO_OF_WORDS
-            )
-        }
     }
 
     /*
