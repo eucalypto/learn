@@ -72,9 +72,12 @@ class GameFragment : Fragment() {
 
         val guess = binding.textInputEditText.text.toString()
         viewModel.checkUserInput(guess)
-        setErrorTextField(!viewModel.hasGuessedCorrectly)
-
-        nextWordOrGameFinishDialog()
+        if (viewModel.hasGuessedCorrectly) {
+            setErrorTextField(false)
+            nextWordOrGameFinishDialog()
+        } else {
+            setErrorTextField(true)
+        }
     }
 
     /*

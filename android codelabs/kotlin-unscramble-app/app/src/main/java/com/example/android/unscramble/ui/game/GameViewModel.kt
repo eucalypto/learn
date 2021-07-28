@@ -30,7 +30,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun checkUserInput(userInput: String) {
-        if (userInput == currentWord) {
+        if (userInput.equals(currentWord, ignoreCase = true)) {
             _score += SCORE_INCREASE
             _hasGuessedCorrectly = true
         } else {
