@@ -50,12 +50,13 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.maxNoOfWords = MAX_NO_OF_WORDS
+
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
-        viewModel.currentScrambledWord.observe(viewLifecycleOwner) { newScrambledWord ->
-            binding.textViewUnscrambledWord.text = newScrambledWord
-        }
         viewModel.score.observe(viewLifecycleOwner) {
             binding.score.text = getString(R.string.score, it)
         }
