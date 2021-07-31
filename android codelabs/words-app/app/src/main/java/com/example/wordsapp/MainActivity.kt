@@ -16,7 +16,11 @@
 package com.example.wordsapp
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wordsapp.databinding.ActivityMainBinding
@@ -27,6 +31,8 @@ import com.example.wordsapp.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
 
+    private var isLinearLayoutManager = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,9 +40,47 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         recyclerView = binding.recyclerView
-        // Sets the LinearLayoutManager of the recyclerview
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        chooseLayout()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.layout_menu, menu)
+
+        val button = menu?.findItem(R.id.action_switch_layout)
+        button?.let { setIcon(it) }
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_switch_layout -> {
+                isLinearLayoutManager = !isLinearLayoutManager
+                chooseLayout()
+                setIcon(item)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun chooseLayout() {
+        recyclerView.layoutManager =
+            if (isLinearLayoutManager)
+                LinearLayoutManager(this)
+            else
+                GridLayoutManager(this, 4)
+
         recyclerView.adapter = LetterAdapter()
     }
 
+    private fun setIcon(menuItem: MenuItem) {
+        menuItem.icon = ContextCompat.getDrawable(
+            this,
+            if (isLinearLayoutManager)
+                R.drawable.ic_linear_layout
+            else
+                R.drawable.ic_grid_layout
+        )
+    }
 }
