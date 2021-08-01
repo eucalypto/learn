@@ -27,6 +27,10 @@ import androidx.databinding.DataBindingUtil
 import com.example.android.dessertclicker.databinding.ActivityMainBinding
 import timber.log.Timber
 
+
+private const val KEY_REVENUE = "Key_Revenue"
+private const val Key_DESSERTS_SOLD = "Key_Desserts_Sold"
+
 class MainActivity : AppCompatActivity() {
 
     private var revenue = 0
@@ -69,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         Timber.d("onCreate()")
 
         // Use Data Binding to get reference to the views
@@ -76,6 +81,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
+        }
+
+        savedInstanceState?.let {
+            revenue = it.getInt(KEY_REVENUE)
+            dessertsSold = it.getInt(Key_DESSERTS_SOLD)
+            showCurrentDessert()
         }
 
         // Set the TextViews to the right values
@@ -166,6 +177,9 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Timber.d("onSaveInstanceState()")
+
+        outState.putInt(KEY_REVENUE, revenue)
+        outState.putInt(Key_DESSERTS_SOLD, dessertsSold)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
