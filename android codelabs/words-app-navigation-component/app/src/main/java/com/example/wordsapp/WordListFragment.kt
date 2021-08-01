@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wordsapp.databinding.WordListFragmentBinding
@@ -12,11 +13,12 @@ import com.example.wordsapp.databinding.WordListFragmentBinding
 class WordListFragment : Fragment() {
 
     companion object {
-        const val LETTER = "letter"
         const val SEARCH_PREFIX = "https://www.google.com/search?q="
     }
 
     private lateinit var binding: WordListFragmentBinding
+
+    private val args: WordListFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +34,7 @@ class WordListFragment : Fragment() {
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = WordAdapter("a", requireContext())
+            adapter = WordAdapter(args.letter, requireContext())
             addItemDecoration(
                 DividerItemDecoration(
                     requireContext(),
