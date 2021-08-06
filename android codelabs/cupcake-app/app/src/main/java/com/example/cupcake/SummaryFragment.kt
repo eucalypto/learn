@@ -52,11 +52,9 @@ class SummaryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
-            viewModel = this@SummaryFragment.viewModel
-            lifecycleOwner = viewLifecycleOwner
-            sendButton.setOnClickListener { sendOrder() }
-        }
+        binding?.viewModel = viewModel
+        binding?.lifecycleOwner = viewLifecycleOwner
+        binding?.fragment = this
     }
 
     /**
