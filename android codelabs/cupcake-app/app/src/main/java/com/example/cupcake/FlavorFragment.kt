@@ -53,6 +53,7 @@ class FlavorFragment : Fragment() {
 
         binding?.apply {
             viewModel = this@FlavorFragment.viewModel
+            lifecycleOwner = viewLifecycleOwner
             nextButton.setOnClickListener { goToNextScreen() }
         }
     }
