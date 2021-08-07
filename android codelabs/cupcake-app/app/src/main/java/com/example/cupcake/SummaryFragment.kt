@@ -15,11 +15,11 @@
  */
 package com.example.cupcake
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -67,7 +67,26 @@ class SummaryFragment : Fragment() {
      * Submit the order by sharing out the order details to another app via an implicit intent.
      */
     fun sendOrder() {
-        Toast.makeText(activity, "Send Order", Toast.LENGTH_SHORT).show()
+        val orderSummary = getString(
+            R.string.order_details,
+            viewModel.quantity.value.toString(),
+            viewModel.flavor.value,
+            viewModel.date.value,
+            viewModel.price.value
+        )
+        val shareIntent = Intent(Intent.ACTION_SEND)
+            .setType("text/plain")
+            .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_summary))
+            .putExtra(Intent.EXTRA_TEXT, orderSummary)
+
+        val noActivityForIntentFound =
+            requireActivity().packageManager.resolveActivity(
+                shareIntent,
+                0
+            ) == null
+        if (noActivityForIntentFound) return
+
+        startActivity(shareIntent)
     }
 
     /**
