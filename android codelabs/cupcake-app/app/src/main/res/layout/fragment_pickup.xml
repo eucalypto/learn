@@ -109,15 +109,15 @@
 
             <Button
                 android:id="@+id/cancel_button"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/side_margin"
                 android:layout_marginEnd="@dimen/margin_between_elements"
                 android:onClick="@{() -> fragment.cancelAndGoToStartScreen()}"
                 android:text="@string/cancel"
                 app:layout_constraintEnd_toStartOf="@id/next_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/subtotal" />
+                app:layout_constraintTop_toTopOf="@+id/next_button" />
 
             <Button
                 android:id="@+id/next_button"
