@@ -141,6 +141,12 @@
                 android:onClick="@{() -> fragment.sendOrder()}"
                 android:text="@string/send" />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> fragment.cancelAndGoToStartScreen()}"
+                android:text="@string/cancel" />
+
         </LinearLayout>
     </ScrollView>
 </layout>
