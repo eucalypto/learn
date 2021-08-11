@@ -14,5 +14,14 @@
             ?attr/colorPrimaryVariant
         </item>
         <!-- Customize your theme here. -->
+
+        <item name="textInputStyle">
+            @style/Widget.MaterialComponents.TextInputLayout.OutlinedBox
+        </item>
+        <item name="radioButtonStyle">
+            @style/Widget.tiptime.CompoundButton.RadioButton
+        </item>
+        <item name="switchStyle">@style/Widget.tiptime.CompoundButton.Switch
+        </item>
     </style>
 </resources>
