@@ -50,7 +50,7 @@ class OverviewViewModel : ViewModel() {
     private fun getMarsPhotos() {
         viewModelScope.launch {
             try {
-                _status.value = MarsApi.retrofitService.getPhotos()
+                _status.value = MarsApi.retrofitService.getPhotos().toString()
             } catch (e: IOException) {
                 _status.value = "Failure: ${e.message}"
                 Log.d("OverviewViewModel", "", e)
