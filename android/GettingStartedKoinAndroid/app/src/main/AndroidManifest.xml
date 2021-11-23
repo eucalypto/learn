@@ -3,11 +3,24 @@
     package="net.eucalypto.gettingstartedkoinandroid">
 
     <application
+        android:name=".GettingStartedKoinApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GettingStartedKoinAndroid" />
+        android:theme="@style/Theme.GettingStartedKoinAndroid">
+
+        <activity
+            android:name=".view.simple.MySimpleActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
 
 </manifest>
